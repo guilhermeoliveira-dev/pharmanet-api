@@ -5,13 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@PrimaryKeyJoinColumn(name = "usuario_id")
 public class Cliente extends Usuario {
 
     private Float fidelidadePontos;

@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@PrimaryKeyJoinColumn(name = "usuario_id") // Define o nome da coluna de join
 public class Funcionario extends Usuario{
 
 //    @Id

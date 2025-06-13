@@ -42,6 +42,11 @@ public class FuncionarioDTO {
     public static FuncionarioDTO create(Funcionario funcionario) {
         ModelMapper modelMapper = new ModelMapper();
         FuncionarioDTO dto = modelMapper.map(funcionario, FuncionarioDTO.class);
+
+        // Para previnir falhas de segurança, já que o DTO tenta mandar a senha, mas a gente precisa da senha no
+        // DTO para que a conta possa ser criada.
+        dto.senha = "";
+
         dto.salario = funcionario.getSalario();
         dto.expediente = funcionario.getExpediente();
 
