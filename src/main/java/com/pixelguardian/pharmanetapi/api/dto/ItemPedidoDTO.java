@@ -60,13 +60,16 @@ public class ItemPedidoDTO {
         dto.dataEntrega = itemPedido.getPedidoCompra().getDataEntrega();
         dto.idEndereco = itemPedido.getPedidoCompra().getEndereco().getId();
 
-        dto.idReceita = itemPedido.getReceita().getId();
-        dto.medico = itemPedido.getReceita().getMedico();
-        dto.dataEmissao = itemPedido.getReceita().getDataEmissao();
-        dto.validade = itemPedido.getReceita().getValidade();
-        dto.itemPrescrito = itemPedido.getReceita().getItemPrescrito();
-        dto.aprovado = itemPedido.getReceita().getAprovado();
-        dto.idfuncionario = itemPedido.getReceita().getFuncionario().getId();
+        // Receitas podem ser nulas, é um campo opcional. Se não verificarmos dá nullPointerException
+        if (itemPedido.getReceita() != null){
+            dto.idReceita = itemPedido.getReceita().getId();
+            dto.medico = itemPedido.getReceita().getMedico();
+            dto.dataEmissao = itemPedido.getReceita().getDataEmissao();
+            dto.validade = itemPedido.getReceita().getValidade();
+            dto.itemPrescrito = itemPedido.getReceita().getItemPrescrito();
+            dto.aprovado = itemPedido.getReceita().getAprovado();
+            dto.idfuncionario = itemPedido.getReceita().getFuncionario().getId();
+        }
         return dto;
     }
 }

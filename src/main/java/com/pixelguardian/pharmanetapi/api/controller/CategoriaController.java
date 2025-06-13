@@ -1,10 +1,12 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
+import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.Categoria;
 import com.pixelguardian.pharmanetapi.service.CategoriaService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +38,21 @@ public class CategoriaController {
         return ResponseEntity.ok(categoria.map(CategoriaDTO::create));
     }
 
+    @PostMapping()
+    public ResponseEntity post(CategoriaDTO dto) {
+        try {
+            Categoria categoria = converter(dto);
+            categoria = categoriaService.salvar(categoria);
+            return new ResponseEntity(categoria, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     public Categoria converter(CategoriaDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
+        //modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
         Categoria categoria = modelMapper.map(dto, Categoria.class);
         if (dto.getIdCategoriaPai() != null) {
             Optional<Categoria> categoriaPai = categoriaService.getCategoriaById(dto.getIdCategoriaPai());

@@ -1,6 +1,8 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.ItemPedidoDTO;
+import com.pixelguardian.pharmanetapi.api.dto.ItemPedidoDTO;
+import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.*;
 import com.pixelguardian.pharmanetapi.service.EstoqueService;
 import com.pixelguardian.pharmanetapi.service.ItemPedidoService;
@@ -40,6 +42,17 @@ public class ItemPedidoController {
             return new ResponseEntity("Item Pedido não encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(itemPedido.map(ItemPedidoDTO::create));
+    }
+
+    @PostMapping()
+    public ResponseEntity post(ItemPedidoDTO dto) {
+        try {
+            ItemPedido itemPedido = converter(dto);
+            itemPedido = itemPedidoService.salvar(itemPedido);
+            return new ResponseEntity(itemPedido, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     public ItemPedido converter(ItemPedidoDTO dto) {

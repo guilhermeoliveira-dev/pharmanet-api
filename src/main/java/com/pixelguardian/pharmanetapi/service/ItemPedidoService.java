@@ -52,8 +52,8 @@ public class ItemPedidoService {
         if (itemPedido.getPedidoCompra() == null || itemPedido.getPedidoCompra().getId() == null) {
             throw new RegraNegocioException("Pedido de compra inválido");
         }
-        if (itemPedido.getReceita() == null || itemPedido.getReceita().getId() == null) {
-            throw new RegraNegocioException("Receita inválida");
-        }
+//        if (itemPedido.getReceita() == null || itemPedido.getReceita().getId() == null) {
+//            throw new RegraNegocioException("Receita inválida");
+//        }
     }
 }

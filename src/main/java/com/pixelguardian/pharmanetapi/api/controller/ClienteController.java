@@ -1,6 +1,9 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
+import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
 import com.pixelguardian.pharmanetapi.api.dto.ClienteDTO;
+import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
+import com.pixelguardian.pharmanetapi.model.entity.Categoria;
 import com.pixelguardian.pharmanetapi.model.entity.Cliente;
 import com.pixelguardian.pharmanetapi.model.entity.Endereco;
 import com.pixelguardian.pharmanetapi.service.ClienteService;
@@ -37,6 +40,17 @@ public class ClienteController {
             return new ResponseEntity("Cliente não encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(cliente.map(ClienteDTO::create));
+    }
+
+    @PostMapping()
+    public ResponseEntity post(ClienteDTO dto) {
+        try {
+            Cliente cliente = converter(dto);
+            cliente = clienteService.salvar(cliente);
+            return new ResponseEntity(cliente, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     public Cliente converter(ClienteDTO dto) {
