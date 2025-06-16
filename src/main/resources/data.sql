@@ -161,19 +161,19 @@ VALUES ('20241113000000', '13-11-2024', '19-11-2024', 'finalizado', 'entregue', 
        ('20241113000002', '13-11-2024', '', 'pagamento pendente', 'pendente', 'delivery', 17.98, 1);
 
 -- Receitas
-INSERT INTO public.receita(medico, data_emissao, validade, item_prescrito, aprovado, funcionario_id)
+INSERT INTO public.receita(medico, data_emissao, validade, item_prescrito, aprovado, funcionario_usuario_id)
 VALUES ('Dr. Jose Mario', '14-11-2024', '14-12-2024', 'Cloridrato de Propranolol', true, 4),
        ('Dr. Jose Mario', '14-11-2024', '14-12-2024', 'Cloridrato de Propranolol', true, 4),
        ('Dr. Jose Mario', '14-11-2024', '14-12-2024', 'Cloridrato de Propranolol', false, 4);
 
 -- Itens dos Pedidos
 INSERT INTO public.item_pedido(quantidade, preco_unitario, estoque_id, pedido_compra_id, receita_id)
-VALUES (3, 50, 1, 1, 0),
-       (1, 4, 2, 2, 0),
-       (1, 50, 2, 1, 0),
+VALUES (3, 50, 1, 1, 1),
+       (1, 4, 2, 2, 1),
+       (1, 50, 2, 1, 1),
        (2, 8.99, 2, 3, 1),
        (1, 8.99, 3, 3, 2),
-       (2, 8.99, 3, 4, 3);
+       (2, 8.99, 3, 3, 3);
 
 -- Pagamentos
 INSERT INTO public.pagamento(data_pagamento, valor, forma_pagamento)
@@ -181,7 +181,7 @@ VALUES ('13-11-2024', 150, 'credito'),
        ('13-11-2024', 150, 'em especie');
 
 -- Notificações
-INSERT INTO public.notificacao(usuario_id, mensagem, dataEnvio, tipoNotificacao)
+INSERT INTO public.notificacao(usuario_id, mensagem, data_envio, tipo_notificacao)
 VALUES (1, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (2, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (3, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
@@ -190,10 +190,15 @@ VALUES (1, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (6, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push');
 
 -- Feedbacks
-INSERT INTO public.feedback(comentario, nota, produto_id, cliente_id)
+INSERT INTO public.feedback(comentario, nota, produto_id, cliente_usuario_id)
 VALUES ('Otimo produto', 4, 2, 1),
        ('Gostei, mas deu problema pro gato', 3.5, 2, 2),
        ('Me curou', 5, 1, 3);
+
+-- Vendas
+INSERT INTO public.venda(data_venda, pagamento_id, pedido_compra_id)
+VALUES ('13-11-2024', 1, 1),
+       ('13-11-2024', 2, 2);
 
 -- Itens dos Pedidos de Compra (TODO: Ajustar os IDs depois conforme os testes no DBeaver. Substituir os IDs igual a 0 e as strings vazias por NULL)
 -- INSERT INTO public.item_pedido
