@@ -195,6 +195,11 @@ VALUES ('Otimo produto', 4, 2, 1),
        ('Gostei, mas deu problema pro gato', 3.5, 2, 2),
        ('Me curou', 5, 1, 3);
 
+-- Vendas
+INSERT INTO public.vendas(data_venda, pagamento_id, pedido_compra_id)
+VALUES ("13-11-2024", 1, 1),
+       ("13-11-2024", 2, 2);
+
 -- Itens dos Pedidos de Compra (TODO: Ajustar os IDs depois conforme os testes no DBeaver. Substituir os IDs igual a 0 e as strings vazias por NULL)
 -- INSERT INTO public.item_pedido
 -- (preco_unitario, quantidade, estoque_id, pedido_compra_id, receita_id)
