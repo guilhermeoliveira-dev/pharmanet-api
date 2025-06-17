@@ -1,6 +1,8 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
+import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
 import com.pixelguardian.pharmanetapi.api.dto.ProdutoDTO;
+import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.Categoria;
 import com.pixelguardian.pharmanetapi.model.entity.Produto;
 import com.pixelguardian.pharmanetapi.model.entity.Tarja;
@@ -40,6 +42,17 @@ public class ProdutoController {
             return new ResponseEntity("Produto não encontrada", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(produto.map(ProdutoDTO::create));
+    }
+
+    @PostMapping()
+    public ResponseEntity post(ProdutoDTO dto) {
+        try {
+            Produto produto = converter(dto);
+            produto = produtoService.salvar(produto);
+            return new ResponseEntity(produto, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     public Produto converter(ProdutoDTO dto) {

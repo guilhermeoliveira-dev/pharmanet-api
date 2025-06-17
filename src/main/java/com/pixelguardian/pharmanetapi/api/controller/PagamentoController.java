@@ -1,6 +1,9 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
+import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
 import com.pixelguardian.pharmanetapi.api.dto.PagamentoDTO;
+import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
+import com.pixelguardian.pharmanetapi.model.entity.Categoria;
 import com.pixelguardian.pharmanetapi.model.entity.Pagamento;
 import com.pixelguardian.pharmanetapi.service.PagamentoService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +37,17 @@ public class PagamentoController {
             return new ResponseEntity("Pagamento não encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(pagamento.map(PagamentoDTO::create));
+    }
+
+    @PostMapping()
+    public ResponseEntity post(PagamentoDTO dto) {
+        try {
+            Pagamento pagamento = converter(dto);
+            pagamento = pagamentoService.salvar(pagamento);
+            return new ResponseEntity(pagamento, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     public Pagamento converter(PagamentoDTO dto) {
