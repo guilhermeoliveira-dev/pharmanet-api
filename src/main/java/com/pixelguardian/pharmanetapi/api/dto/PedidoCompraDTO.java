@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 @AllArgsConstructor
 public class PedidoCompraDTO {
 
+    private Long id;
     private String codigo;
     private String dataCriacao;
     private String status;
