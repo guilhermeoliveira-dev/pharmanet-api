@@ -1,6 +1,7 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
+import com.pixelguardian.pharmanetapi.api.dto.ReceitaDTO;
 import com.pixelguardian.pharmanetapi.api.dto.VendaDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.*;
@@ -50,6 +51,21 @@ public class VendaController {
             Venda venda = converter(dto);
             venda = vendaService.salvar(venda);
             return new ResponseEntity(venda, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody VendaDTO dto) {
+        if (!vendaService.getVendaById(id).isPresent()) {
+            return new ResponseEntity("Venda não encontrada", HttpStatus.NOT_FOUND);
+        }
+        try {
+            Venda venda = converter(dto);
+            venda.setId(id);
+            vendaService.salvar(venda);
+            return ResponseEntity.ok(venda);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
