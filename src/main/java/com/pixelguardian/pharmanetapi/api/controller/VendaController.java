@@ -57,7 +57,7 @@ public class VendaController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody VendaDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, VendaDTO dto) {
         if (!vendaService.getVendaById(id).isPresent()) {
             return new ResponseEntity("Venda não encontrada", HttpStatus.NOT_FOUND);
         }

@@ -39,7 +39,7 @@ public class PedidoCompraController {
     public ResponseEntity get(@PathVariable("id") Long id) {
         Optional<PedidoCompra> pedidoCompra = pedidoCompraService.getPedidoCompraById(id);
         if (!pedidoCompra.isPresent()) {
-            return new ResponseEntity("PedidoCompra não encontrada", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(pedidoCompra.map(PedidoCompraDTO::create));
     }
@@ -56,7 +56,7 @@ public class PedidoCompraController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody PedidoCompraDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, PedidoCompraDTO dto) {
         if (!pedidoCompraService.getPedidoCompraById(id).isPresent()) {
             return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
         }

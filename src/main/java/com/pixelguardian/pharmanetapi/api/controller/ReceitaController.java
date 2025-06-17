@@ -56,7 +56,7 @@ public class ReceitaController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody ReceitaDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, ReceitaDTO dto) {
         if (!receitaService.getReceitaById(id).isPresent()) {
             return new ResponseEntity("Receita não encontrada", HttpStatus.NOT_FOUND);
         }

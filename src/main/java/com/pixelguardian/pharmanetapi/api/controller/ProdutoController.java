@@ -41,7 +41,7 @@ public class ProdutoController {
     public ResponseEntity get(@PathVariable("id") Long id) {
         Optional<Produto> produto = produtoService.getProdutoById(id);
         if (!produto.isPresent()) {
-            return new ResponseEntity("Produto não encontrada", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("Produto não encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(produto.map(ProdutoDTO::create));
     }
@@ -58,7 +58,7 @@ public class ProdutoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody ProdutoDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, ProdutoDTO dto) {
         if (!produtoService.getProdutoById(id).isPresent()) {
             return new ResponseEntity("Produto não encontrado", HttpStatus.NOT_FOUND);
         }
