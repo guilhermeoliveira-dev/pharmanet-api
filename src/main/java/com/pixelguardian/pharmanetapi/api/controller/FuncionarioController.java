@@ -1,10 +1,9 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.FuncionarioDTO;
-import com.pixelguardian.pharmanetapi.model.entity.Cargo;
-import com.pixelguardian.pharmanetapi.model.entity.Endereco;
-import com.pixelguardian.pharmanetapi.model.entity.Funcionario;
-import com.pixelguardian.pharmanetapi.model.entity.Farmacia;
+import com.pixelguardian.pharmanetapi.api.dto.FuncionarioDTO;
+import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
+import com.pixelguardian.pharmanetapi.model.entity.*;
 import com.pixelguardian.pharmanetapi.service.CargoService;
 import com.pixelguardian.pharmanetapi.service.EnderecoService;
 import com.pixelguardian.pharmanetapi.service.FarmaciaService;
@@ -43,6 +42,17 @@ public class FuncionarioController {
             return new ResponseEntity("Funcionário não encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(funcionario.map(FuncionarioDTO::create));
+    }
+
+    @PostMapping()
+    public ResponseEntity post(FuncionarioDTO dto) {
+        try {
+            Funcionario funcionario = converter(dto);
+            funcionario = funcionarioService.salvar(funcionario);
+            return new ResponseEntity(funcionario, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     public Funcionario converter(FuncionarioDTO dto) {

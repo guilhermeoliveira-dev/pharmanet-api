@@ -1,6 +1,9 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
+import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
 import com.pixelguardian.pharmanetapi.api.dto.ReceitaDTO;
+import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
+import com.pixelguardian.pharmanetapi.model.entity.Categoria;
 import com.pixelguardian.pharmanetapi.model.entity.Funcionario;
 import com.pixelguardian.pharmanetapi.model.entity.Receita;
 import com.pixelguardian.pharmanetapi.service.FuncionarioService;
@@ -37,6 +40,17 @@ public class ReceitaController {
             return new ResponseEntity("Receita não encontrada", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(receita.map(ReceitaDTO::create));
+    }
+
+    @PostMapping()
+    public ResponseEntity post(ReceitaDTO dto) {
+        try {
+            Receita receita = converter(dto);
+            receita = receitaService.salvar(receita);
+            return new ResponseEntity(receita, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     public Receita converter(ReceitaDTO dto) {

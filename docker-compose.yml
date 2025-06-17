@@ -1,0 +1,40 @@
+version: '3.8'
+
+#networks:
+#  test:
+
+services:
+
+#  # Isso aí foi a minha tentativa de integrar o spring boot no docker compose. Era para dar 100% certo, mas tem um
+#  # bug esquisito no intellij que faz ele gerar uma porta aleatória toda vez que o programa roda. Isso torna
+#  # absolutamente inutilizável pra mecher já que teria que mudar todas as portas em todos os testes la do postman,
+#  # então eu fiz um modelo meio híbrido em que o banco de dados roda no docker e o spring boot roda normalmente e
+#  # acessa o docker pela porta 5432 igual antes. Eu espero que isso funcione. O Dockerfile é efeito colateral.
+
+#  java:
+#    platform: linux/x86_64
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+##    networks:
+##      - test
+#    ports:
+#      - "8080:8080"
+#    expose:
+#      - 8080
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+#      - POSTGRES_ROLE=compose-postgres
+      - POSTGRES_DB=pharmanet
+      - POSTGRES_USER=pharmanet
+      - POSTGRES_PASSWORD=pharmanet12345
+#      - POSTGRES_HOST=pharmanet
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+#    networks:
+#      - test

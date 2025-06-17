@@ -17,6 +17,7 @@ public class ClienteDTO {
     private String cpf;
     private String telefone;
     private String dataAdmissao;
+    private String senha;
 
     private Long idEndereco;
     private String uf;
@@ -32,6 +33,11 @@ public class ClienteDTO {
     public static ClienteDTO create(Cliente cliente) {
         ModelMapper modelMapper = new ModelMapper();
         ClienteDTO dto = modelMapper.map(cliente, ClienteDTO.class);
+
+        // Para previnir falhas de segurança, já que o DTO tenta mandar a senha, mas a gente precisa da senha no
+        // DTO para que a conta possa ser criada.
+        dto.senha = "";
+
         dto.idEndereco = cliente.getEndereco().getId();
         dto.logradouro = cliente.getEndereco().getLogradouro();
         dto.numero = cliente.getEndereco().getNumero();

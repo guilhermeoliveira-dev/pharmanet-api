@@ -1,6 +1,9 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
+import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
 import com.pixelguardian.pharmanetapi.api.dto.PedidoCompraDTO;
+import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
+import com.pixelguardian.pharmanetapi.model.entity.Categoria;
 import com.pixelguardian.pharmanetapi.model.entity.Endereco;
 import com.pixelguardian.pharmanetapi.model.entity.PedidoCompra;
 import com.pixelguardian.pharmanetapi.service.EnderecoService;
@@ -37,6 +40,17 @@ public class PedidoCompraController {
             return new ResponseEntity("PedidoCompra não encontrada", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(pedidoCompra.map(PedidoCompraDTO::create));
+    }
+
+    @PostMapping()
+    public ResponseEntity post(PedidoCompraDTO dto) {
+        try {
+            PedidoCompra pedidoCompra = converter(dto);
+            pedidoCompra = pedidoCompraService.salvar(pedidoCompra);
+            return new ResponseEntity(pedidoCompra, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     public PedidoCompra converter(PedidoCompraDTO dto) {
