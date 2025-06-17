@@ -55,6 +55,21 @@ public class ItemPedidoController {
         }
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, ItemPedidoDTO dto) {
+        if (!itemPedidoService.getItemPedidoById(id).isPresent()) {
+            return new ResponseEntity("ItemPedido não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            ItemPedido itemPedido = converter(dto);
+            itemPedido.setId(id);
+            itemPedidoService.salvar(itemPedido);
+            return ResponseEntity.ok(itemPedido);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     public ItemPedido converter(ItemPedidoDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         ItemPedido itemPedido = modelMapper.map(dto, ItemPedido.class);
