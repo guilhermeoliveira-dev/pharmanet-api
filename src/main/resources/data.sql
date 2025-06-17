@@ -1,4 +1,4 @@
--- select 1;
+select 1;
 
 -- Limpeza de tabelas
 truncate table cargo restart identity cascade;
