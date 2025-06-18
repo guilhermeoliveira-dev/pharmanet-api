@@ -58,8 +58,9 @@ public class EnderecoService {
         if (endereco.getNumero() == null || endereco.getNumero().trim().equals("")) {
             throw new RegraNegocioException("Número inválido");
         }
-        if (endereco.getComplemento() == null || endereco.getComplemento().trim().equals("")) {
-            throw new RegraNegocioException("Complemento inválido");
-        }
+        // complemento é opcional
+//        if (endereco.getComplemento() == null || endereco.getComplemento().trim().equals("")) {
+//            throw new RegraNegocioException("Complemento inválido");
+//        }
     }
 }
