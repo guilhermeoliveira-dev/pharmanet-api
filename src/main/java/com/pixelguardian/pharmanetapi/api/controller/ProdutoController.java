@@ -1,13 +1,8 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
-import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
-import com.pixelguardian.pharmanetapi.api.dto.PedidoCompraDTO;
 import com.pixelguardian.pharmanetapi.api.dto.ProdutoDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
-import com.pixelguardian.pharmanetapi.model.entity.Categoria;
-import com.pixelguardian.pharmanetapi.model.entity.PedidoCompra;
-import com.pixelguardian.pharmanetapi.model.entity.Produto;
-import com.pixelguardian.pharmanetapi.model.entity.Tarja;
+import com.pixelguardian.pharmanetapi.model.entity.*;
 import com.pixelguardian.pharmanetapi.service.CategoriaService;
 import com.pixelguardian.pharmanetapi.service.ProdutoService;
 import com.pixelguardian.pharmanetapi.service.TarjaService;
@@ -67,6 +62,20 @@ public class ProdutoController {
             produto.setId(id);
             produtoService.salvar(produto);
             return ResponseEntity.ok(produto);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity excluir(@PathVariable("id") Long id) {
+        Optional<Produto> produto = produtoService.getProdutoById(id);
+        if (!produto.isPresent()) {
+            return new ResponseEntity("Produto não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            produtoService.excluir(produto.get());
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
