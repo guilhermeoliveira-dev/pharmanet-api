@@ -1,7 +1,5 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
-import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
-import com.pixelguardian.pharmanetapi.api.dto.ReceitaDTO;
 import com.pixelguardian.pharmanetapi.api.dto.VendaDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.*;
@@ -107,23 +105,3 @@ public class VendaController {
         return venda;
     }
 }
-
-//public Aluno converter(AlunoDTO dto) {
-//    ModelMapper modelMapper = new ModelMapper();
-//    Aluno aluno = modelMapper.map(dto, Aluno.class);
-//
-//    // esse atributo foi passado direto
-//    Endereco endereco = modelMapper.map(dto, Endereco.class);
-//    aluno.setEndereco(endereco);
-//
-//    // esse atributo foi verificado com if e os caramba, provavelmente pq ele precisa de leitura no banco de dados
-//    if (dto.getIdCurso() != null) {
-//        Optional<Curso> curso = cursoService.getCursoById(dto.getIdCurso());
-//        if (!curso.isPresent()) {
-//            aluno.setCurso(null);
-//        } else {
-//            aluno.setCurso(curso.get());
-//        }
-//    }
-//    return aluno;
-//}
