@@ -61,6 +61,8 @@ public class FarmaciaController {
         try {
             Farmacia farmacia = converter(dto);
             farmacia.setId(id);
+            Endereco endereco = enderecoService.salvar(farmacia.getEndereco());
+            farmacia.setEndereco(endereco);
             farmaciaService.salvar(farmacia);
             return ResponseEntity.ok(farmacia);
         } catch (RegraNegocioException e) {
@@ -71,14 +73,16 @@ public class FarmaciaController {
     public Farmacia converter(FarmaciaDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         Farmacia farmacia = modelMapper.map(dto, Farmacia.class);
-        if (dto.getIdEndereco() != null) {
-            Optional<Endereco> endereco = enderecoService.getEnderecoById((dto.getIdEndereco()));
-            if (endereco.isPresent()) {
-                farmacia.setEndereco(endereco.get());
-            } else {
-                farmacia.setEndereco(null);
-            }
-        }
+        Endereco endereco = modelMapper.map(dto, Endereco.class);
+        farmacia.setEndereco(endereco);
+//        if (dto.getIdEndereco() != null) {
+//            Optional<Endereco> endereco = enderecoService.getEnderecoById((dto.getIdEndereco()));
+//            if (endereco.isPresent()) {
+//                farmacia.setEndereco(endereco.get());
+//            } else {
+//                farmacia.setEndereco(null);
+//            }
+//        }
         return farmacia;
     }
 }

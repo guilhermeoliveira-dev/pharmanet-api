@@ -1,7 +1,6 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.ItemPedidoDTO;
-import com.pixelguardian.pharmanetapi.api.dto.ItemPedidoDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.*;
 import com.pixelguardian.pharmanetapi.service.EstoqueService;
@@ -63,6 +62,8 @@ public class ItemPedidoController {
         try {
             ItemPedido itemPedido = converter(dto);
             itemPedido.setId(id);
+            Receita receita = receitaService.salvar(itemPedido.getReceita());
+            itemPedido.setReceita(receita);
             itemPedidoService.salvar(itemPedido);
             return ResponseEntity.ok(itemPedido);
         } catch (RegraNegocioException e) {
@@ -73,6 +74,8 @@ public class ItemPedidoController {
     public ItemPedido converter(ItemPedidoDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         ItemPedido itemPedido = modelMapper.map(dto, ItemPedido.class);
+        Receita receita = modelMapper.map(dto, Receita.class);
+        itemPedido.setReceita(receita);
         if (dto.getIdEstoque() != null) {
             Optional<Estoque> estoque = estoqueService.getEstoqueById((dto.getIdEstoque()));
             if (estoque.isPresent()) {
@@ -89,14 +92,7 @@ public class ItemPedidoController {
                 itemPedido.setPedidoCompra(null);
             }
         }
-        if (dto.getIdReceita() != null) {
-            Optional<Receita> receita = receitaService.getReceitaById((dto.getIdReceita()));
-            if (receita.isPresent()) {
-                itemPedido.setReceita(receita.get());
-            } else {
-                itemPedido.setReceita(null);
-            }
-        }
+
         return itemPedido;
     }
 }

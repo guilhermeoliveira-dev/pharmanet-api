@@ -61,6 +61,8 @@ public class ClienteController {
         try {
             Cliente cliente = converter(dto);
             cliente.setId(id);
+            Endereco endereco = enderecoService.salvar(cliente.getEndereco());
+            cliente.setEndereco(endereco);
             clienteService.salvar(cliente);
             return ResponseEntity.ok(cliente);
         } catch (RegraNegocioException e) {
@@ -71,14 +73,16 @@ public class ClienteController {
     public Cliente converter(ClienteDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         Cliente cliente = modelMapper.map(dto, Cliente.class);
-        if (dto.getIdEndereco() != null) {
-            Optional<Endereco> endereco = enderecoService.getEnderecoById((dto.getIdEndereco()));
-            if (endereco.isPresent()) {
-                cliente.setEndereco(endereco.get());
-            } else {
-                cliente.setEndereco(null);
-            }
-        }
+        Endereco endereco = modelMapper.map(dto, Endereco.class);
+        cliente.setEndereco(endereco);
+//        if (dto.getIdEndereco() != null) {
+//            Optional<Endereco> endereco = enderecoService.getEnderecoById((dto.getIdEndereco()));
+//            if (endereco.isPresent()) {
+//                cliente.setEndereco(endereco.get());
+//            } else {
+//                cliente.setEndereco(null);
+//            }
+//        }
         return cliente;
     }
 }
