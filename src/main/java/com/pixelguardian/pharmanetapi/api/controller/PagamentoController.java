@@ -51,7 +51,7 @@ public class PagamentoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody PagamentoDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, PagamentoDTO dto) {
         if (!pagamentoService.getPagamentoById(id).isPresent()) {
             return new ResponseEntity("Pagamento não encontrado", HttpStatus.NOT_FOUND);
         }
