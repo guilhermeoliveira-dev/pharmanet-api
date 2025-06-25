@@ -52,18 +52,37 @@ public class FarmaciaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, FarmaciaDTO dto) {
+        if (!farmaciaService.getFarmaciaById(id).isPresent()) {
+            return new ResponseEntity("Farmácia não encontrada", HttpStatus.NOT_FOUND);
+        }
+        try {
+            Farmacia farmacia = converter(dto);
+            farmacia.setId(id);
+            Endereco endereco = enderecoService.salvar(farmacia.getEndereco());
+            farmacia.setEndereco(endereco);
+            farmaciaService.salvar(farmacia);
+            return ResponseEntity.ok(farmacia);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     
     public Farmacia converter(FarmaciaDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         Farmacia farmacia = modelMapper.map(dto, Farmacia.class);
-        if (dto.getIdEndereco() != null) {
-            Optional<Endereco> endereco = enderecoService.getEnderecoById((dto.getIdEndereco()));
-            if (endereco.isPresent()) {
-                farmacia.setEndereco(endereco.get());
-            } else {
-                farmacia.setEndereco(null);
-            }
-        }
+        Endereco endereco = modelMapper.map(dto, Endereco.class);
+        farmacia.setEndereco(endereco);
+//        if (dto.getIdEndereco() != null) {
+//            Optional<Endereco> endereco = enderecoService.getEnderecoById((dto.getIdEndereco()));
+//            if (endereco.isPresent()) {
+//                farmacia.setEndereco(endereco.get());
+//            } else {
+//                farmacia.setEndereco(null);
+//            }
+//        }
         return farmacia;
     }
 }

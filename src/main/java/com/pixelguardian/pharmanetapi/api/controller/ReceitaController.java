@@ -1,10 +1,12 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
+import com.pixelguardian.pharmanetapi.api.dto.ProdutoDTO;
 import com.pixelguardian.pharmanetapi.api.dto.ReceitaDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.Categoria;
 import com.pixelguardian.pharmanetapi.model.entity.Funcionario;
+import com.pixelguardian.pharmanetapi.model.entity.Produto;
 import com.pixelguardian.pharmanetapi.model.entity.Receita;
 import com.pixelguardian.pharmanetapi.service.FuncionarioService;
 import com.pixelguardian.pharmanetapi.service.ReceitaService;
@@ -48,6 +50,21 @@ public class ReceitaController {
             Receita receita = converter(dto);
             receita = receitaService.salvar(receita);
             return new ResponseEntity(receita, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, ReceitaDTO dto) {
+        if (!receitaService.getReceitaById(id).isPresent()) {
+            return new ResponseEntity("Receita não encontrada", HttpStatus.NOT_FOUND);
+        }
+        try {
+            Receita receita = converter(dto);
+            receita.setId(id);
+            receitaService.salvar(receita);
+            return ResponseEntity.ok(receita);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

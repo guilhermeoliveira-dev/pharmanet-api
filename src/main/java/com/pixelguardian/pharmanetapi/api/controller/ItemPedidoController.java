@@ -1,7 +1,6 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.ItemPedidoDTO;
-import com.pixelguardian.pharmanetapi.api.dto.ItemPedidoDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.*;
 import com.pixelguardian.pharmanetapi.service.EstoqueService;
@@ -55,10 +54,36 @@ public class ItemPedidoController {
         }
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, ItemPedidoDTO dto) {
+        if (!itemPedidoService.getItemPedidoById(id).isPresent()) {
+            return new ResponseEntity("ItemPedido não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            ItemPedido itemPedido = converter(dto);
+            itemPedido.setId(id);
+            itemPedidoService.salvar(itemPedido);
+            return ResponseEntity.ok(itemPedido);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     public ItemPedido converter(ItemPedidoDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         ItemPedido itemPedido = modelMapper.map(dto, ItemPedido.class);
-        if (dto.getIdEstoque() != null) {
+
+        if (dto.getIdReceita() != null && dto.getIdReceita() != 0){
+            Optional<Receita> receita = receitaService.getReceitaById(dto.getIdReceita());
+            if (receita.isPresent()){
+                itemPedido.setReceita(receita.get());
+            }
+            else{
+                itemPedido.setReceita(null);
+            }
+        }
+
+        if (dto.getIdEstoque() != null && dto.getIdEstoque() != 0) {
             Optional<Estoque> estoque = estoqueService.getEstoqueById((dto.getIdEstoque()));
             if (estoque.isPresent()) {
                 itemPedido.setEstoque(estoque.get());
@@ -66,7 +91,7 @@ public class ItemPedidoController {
                 itemPedido.setEstoque(null);
             }
         }
-        if (dto.getIdPedidoCompra() != null) {
+        if (dto.getIdPedidoCompra() != null && dto.getIdPedidoCompra() != 0) {
             Optional<PedidoCompra> pedidoCompra = pedidoCompraService.getPedidoCompraById((dto.getIdPedidoCompra()));
             if (pedidoCompra.isPresent()) {
                 itemPedido.setPedidoCompra(pedidoCompra.get());
@@ -74,14 +99,7 @@ public class ItemPedidoController {
                 itemPedido.setPedidoCompra(null);
             }
         }
-        if (dto.getIdReceita() != null) {
-            Optional<Receita> receita = receitaService.getReceitaById((dto.getIdReceita()));
-            if (receita.isPresent()) {
-                itemPedido.setReceita(receita.get());
-            } else {
-                itemPedido.setReceita(null);
-            }
-        }
+
         return itemPedido;
     }
 }

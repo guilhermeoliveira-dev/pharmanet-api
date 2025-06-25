@@ -1,10 +1,12 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
+import com.pixelguardian.pharmanetapi.api.dto.PagamentoDTO;
 import com.pixelguardian.pharmanetapi.api.dto.PedidoCompraDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.Categoria;
 import com.pixelguardian.pharmanetapi.model.entity.Endereco;
+import com.pixelguardian.pharmanetapi.model.entity.Pagamento;
 import com.pixelguardian.pharmanetapi.model.entity.PedidoCompra;
 import com.pixelguardian.pharmanetapi.service.EnderecoService;
 import com.pixelguardian.pharmanetapi.service.PedidoCompraService;
@@ -37,7 +39,7 @@ public class PedidoCompraController {
     public ResponseEntity get(@PathVariable("id") Long id) {
         Optional<PedidoCompra> pedidoCompra = pedidoCompraService.getPedidoCompraById(id);
         if (!pedidoCompra.isPresent()) {
-            return new ResponseEntity("PedidoCompra não encontrada", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(pedidoCompra.map(PedidoCompraDTO::create));
     }
@@ -48,6 +50,21 @@ public class PedidoCompraController {
             PedidoCompra pedidoCompra = converter(dto);
             pedidoCompra = pedidoCompraService.salvar(pedidoCompra);
             return new ResponseEntity(pedidoCompra, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, PedidoCompraDTO dto) {
+        if (!pedidoCompraService.getPedidoCompraById(id).isPresent()) {
+            return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            PedidoCompra pedidoCompra = converter(dto);
+            pedidoCompra.setId(id);
+            pedidoCompraService.salvar(pedidoCompra);
+            return ResponseEntity.ok(pedidoCompra);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

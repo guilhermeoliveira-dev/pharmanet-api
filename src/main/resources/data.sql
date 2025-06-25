@@ -1,5 +1,3 @@
-select 1;
-
 -- Limpeza de tabelas
 truncate table cargo restart identity cascade;
 truncate table categoria restart identity cascade;

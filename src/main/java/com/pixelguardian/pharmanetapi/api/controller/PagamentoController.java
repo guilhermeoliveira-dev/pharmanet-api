@@ -50,6 +50,21 @@ public class PagamentoController {
         }
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, PagamentoDTO dto) {
+        if (!pagamentoService.getPagamentoById(id).isPresent()) {
+            return new ResponseEntity("Pagamento não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            Pagamento pagamento = converter(dto);
+            pagamento.setId(id);
+            pagamentoService.salvar(pagamento);
+            return ResponseEntity.ok(pagamento);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     public Pagamento converter(PagamentoDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(dto, Pagamento.class);
