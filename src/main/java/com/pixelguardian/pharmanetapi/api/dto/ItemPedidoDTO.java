@@ -58,7 +58,9 @@ public class ItemPedidoDTO {
         dto.tipoEntrega = itemPedido.getPedidoCompra().getTipoEntrega();
         dto.statusEntrega = itemPedido.getPedidoCompra().getStatusEntrega();
         dto.dataEntrega = itemPedido.getPedidoCompra().getDataEntrega();
-        dto.idEndereco = itemPedido.getPedidoCompra().getEndereco().getId();
+        if (itemPedido.getPedidoCompra().getEndereco() != null){
+            dto.idEndereco = itemPedido.getPedidoCompra().getEndereco().getId();
+        }
 
         // Receitas podem ser nulas, é um campo opcional. Se não verificarmos dá nullPointerException
         if (itemPedido.getReceita() != null){

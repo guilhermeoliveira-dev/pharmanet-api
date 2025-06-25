@@ -56,7 +56,6 @@ public class ReceitaService {
             throw new RegraNegocioException("Aprovado inválido");
         }
         if (receita.getFuncionario() == null || receita.getFuncionario().getId() == null || receita.getFuncionario().getId() == 0) {
-
             throw new RegraNegocioException("Funcionário inválido");
         }
     }

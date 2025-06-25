@@ -62,8 +62,6 @@ public class ItemPedidoController {
         try {
             ItemPedido itemPedido = converter(dto);
             itemPedido.setId(id);
-            Receita receita = receitaService.salvar(itemPedido.getReceita());
-            itemPedido.setReceita(receita);
             itemPedidoService.salvar(itemPedido);
             return ResponseEntity.ok(itemPedido);
         } catch (RegraNegocioException e) {
@@ -74,9 +72,18 @@ public class ItemPedidoController {
     public ItemPedido converter(ItemPedidoDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         ItemPedido itemPedido = modelMapper.map(dto, ItemPedido.class);
-        Receita receita = modelMapper.map(dto, Receita.class);
-        itemPedido.setReceita(receita);
-        if (dto.getIdEstoque() != null) {
+
+        if (dto.getIdReceita() != null && dto.getIdReceita() != 0){
+            Optional<Receita> receita = receitaService.getReceitaById(dto.getIdReceita());
+            if (receita.isPresent()){
+                itemPedido.setReceita(receita.get());
+            }
+            else{
+                itemPedido.setReceita(null);
+            }
+        }
+
+        if (dto.getIdEstoque() != null && dto.getIdEstoque() != 0) {
             Optional<Estoque> estoque = estoqueService.getEstoqueById((dto.getIdEstoque()));
             if (estoque.isPresent()) {
                 itemPedido.setEstoque(estoque.get());
@@ -84,7 +91,7 @@ public class ItemPedidoController {
                 itemPedido.setEstoque(null);
             }
         }
-        if (dto.getIdPedidoCompra() != null) {
+        if (dto.getIdPedidoCompra() != null && dto.getIdPedidoCompra() != 0) {
             Optional<PedidoCompra> pedidoCompra = pedidoCompraService.getPedidoCompraById((dto.getIdPedidoCompra()));
             if (pedidoCompra.isPresent()) {
                 itemPedido.setPedidoCompra(pedidoCompra.get());
