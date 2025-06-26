@@ -2,6 +2,7 @@ package com.pixelguardian.pharmanetapi.service;
 
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.ItemPedido;
+import com.pixelguardian.pharmanetapi.model.entity.PedidoCompra;
 import com.pixelguardian.pharmanetapi.model.repository.ItemPedidoRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,10 @@ public class ItemPedidoService {
 
     public List<ItemPedido> getItemPedidos() {
         return repository.findAll();
+    }
+
+    public List<ItemPedido> getItemPedidosByPedidoCompra(PedidoCompra pedidoCompra) {
+        return repository.findByPedidoCompra(pedidoCompra);
     }
 
     public Optional<ItemPedido> getItemPedidoById(Long id) {

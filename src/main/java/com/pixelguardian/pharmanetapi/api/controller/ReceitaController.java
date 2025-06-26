@@ -1,13 +1,8 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
-import com.pixelguardian.pharmanetapi.api.dto.CategoriaDTO;
-import com.pixelguardian.pharmanetapi.api.dto.ProdutoDTO;
 import com.pixelguardian.pharmanetapi.api.dto.ReceitaDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
-import com.pixelguardian.pharmanetapi.model.entity.Categoria;
-import com.pixelguardian.pharmanetapi.model.entity.Funcionario;
-import com.pixelguardian.pharmanetapi.model.entity.Produto;
-import com.pixelguardian.pharmanetapi.model.entity.Receita;
+import com.pixelguardian.pharmanetapi.model.entity.*;
 import com.pixelguardian.pharmanetapi.service.FuncionarioService;
 import com.pixelguardian.pharmanetapi.service.ReceitaService;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +60,20 @@ public class ReceitaController {
             receita.setId(id);
             receitaService.salvar(receita);
             return ResponseEntity.ok(receita);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity excluir(@PathVariable("id") Long id) {
+        Optional<Receita> receita = receitaService.getReceitaById(id);
+        if (!receita.isPresent()) {
+            return new ResponseEntity("Receita não encontrada", HttpStatus.NOT_FOUND);
+        }
+        try {
+            receitaService.excluir(receita.get());
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

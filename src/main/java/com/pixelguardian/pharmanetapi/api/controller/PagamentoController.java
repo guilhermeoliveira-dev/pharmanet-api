@@ -65,6 +65,20 @@ public class PagamentoController {
         }
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity excluir(@PathVariable("id") Long id) {
+        Optional<Pagamento> pagamento = pagamentoService.getPagamentoById(id);
+        if (!pagamento.isPresent()) {
+            return new ResponseEntity("Pagamento não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            pagamentoService.excluir(pagamento.get());
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     public Pagamento converter(PagamentoDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(dto, Pagamento.class);

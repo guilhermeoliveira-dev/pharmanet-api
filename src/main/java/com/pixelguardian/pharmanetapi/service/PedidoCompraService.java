@@ -23,6 +23,8 @@ public class PedidoCompraService {
         return repository.findAll();
     }
 
+
+
     public Optional<PedidoCompra> getPedidoCompraById(Long id) {
         return repository.findById(id);
     }
@@ -53,8 +55,6 @@ public class PedidoCompraService {
             //TODO: data de criação pode ter uma checagem de formato DD/MM/YYYY
             throw new RegraNegocioException("Data de Criação inválida");
         }
-        // TODO: tanto para status do pedido, status da entrega, e para tipo de entrega, podemos criar enums que
-        //  determinam todos os possíveis estados que esses podem representar.
         if (pedidoCompra.getStatus() == null || pedidoCompra.getStatus().trim().equals("")) {
             throw new RegraNegocioException("Status do Pedido inválido");
         }
