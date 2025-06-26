@@ -67,6 +67,20 @@ public class FarmaciaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity excluir(@PathVariable("id") Long id) {
+        Optional<Farmacia> farmacia = farmaciaService.getFarmaciaById(id);
+        if (!farmacia.isPresent()) {
+            return new ResponseEntity("Farmacia não encontrada", HttpStatus.NOT_FOUND);
+        }
+        try {
+            farmaciaService.excluir(farmacia.get());
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     
     public Farmacia converter(FarmaciaDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
