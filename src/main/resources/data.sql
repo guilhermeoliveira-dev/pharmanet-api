@@ -167,9 +167,9 @@ VALUES ('Dr. Jose Mario', '14-11-2024', '14-12-2024', 'Cloridrato de Propranolol
 -- Itens dos Pedidos
 INSERT INTO public.item_pedido(quantidade, preco_unitario, estoque_id, pedido_compra_id, receita_id)
 VALUES (3, 50, 1, 1, 1),
-       (1, 4, 2, 2, 1),
+--        (1, 4, 2, 2, 1),
        (1, 50, 2, 1, 1),
-       (2, 8.99, 2, 3, 1),
+--        (2, 8.99, 2, 3, 1),
        (1, 8.99, 3, 3, 2),
        (2, 8.99, 3, 3, 3);
 
@@ -184,7 +184,7 @@ VALUES (1, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (2, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
 --        (3, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (4, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
-       (5, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
+--        (5, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (6, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push');
 
 -- Feedbacks
