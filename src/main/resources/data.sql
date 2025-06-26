@@ -182,7 +182,7 @@ VALUES ('13-11-2024', 150, 'credito'),
 INSERT INTO public.notificacao(usuario_id, mensagem, data_envio, tipo_notificacao)
 VALUES (1, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (2, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
-       (3, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
+--        (3, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (4, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (5, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (6, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push');
@@ -190,8 +190,8 @@ VALUES (1, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
 -- Feedbacks
 INSERT INTO public.feedback(comentario, nota, produto_id, cliente_usuario_id)
 VALUES ('Otimo produto', 4, 2, 1),
-       ('Gostei, mas deu problema pro gato', 3.5, 2, 2),
-       ('Me curou', 5, 1, 3);
+       ('Gostei, mas deu problema pro gato', 3.5, 2, 2);
+--        ('Me curou', 5, 1, 3);
 
 -- Vendas
 INSERT INTO public.venda(data_venda, pagamento_id, pedido_compra_id)
