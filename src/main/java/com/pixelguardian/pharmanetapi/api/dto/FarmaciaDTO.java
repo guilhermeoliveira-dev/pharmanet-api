@@ -29,14 +29,16 @@ public class FarmaciaDTO {
     public static FarmaciaDTO create(Farmacia farmacia) {
         ModelMapper modelMapper = new ModelMapper();
         FarmaciaDTO dto = modelMapper.map(farmacia, FarmaciaDTO.class);
+
         dto.idEndereco = farmacia.getEndereco().getId();
+        dto.uf = farmacia.getEndereco().getUf();
+        dto.cidade = farmacia.getEndereco().getCidade();
+        dto.cep = farmacia.getEndereco().getCep();
+        dto.bairro = farmacia.getEndereco().getBairro();
         dto.logradouro = farmacia.getEndereco().getLogradouro();
         dto.numero = farmacia.getEndereco().getNumero();
         dto.complemento = farmacia.getEndereco().getComplemento();
-        dto.bairro = farmacia.getEndereco().getBairro();
-        dto.cidade = farmacia.getEndereco().getCidade();
-        dto.uf = farmacia.getEndereco().getUf();
-        dto.cep = farmacia.getEndereco().getCep();
+
         return dto;
     }
 }

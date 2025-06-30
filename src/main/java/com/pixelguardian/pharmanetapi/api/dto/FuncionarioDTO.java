@@ -19,7 +19,7 @@ public class FuncionarioDTO {
     private String cpf;
     private String telefone;
     private String dataAdmissao;
-    //private NaoSei imagemPerfil;
+//    private NaoSei imagemPerfil;
 
     private Float salario;
     private String expediente;
@@ -43,27 +43,28 @@ public class FuncionarioDTO {
         ModelMapper modelMapper = new ModelMapper();
         FuncionarioDTO dto = modelMapper.map(funcionario, FuncionarioDTO.class);
 
-        // Para previnir falhas de segurança, já que o DTO tenta mandar a senha, mas a gente precisa da senha no
-        // DTO para que a conta possa ser criada.
+//        Para previnir falhas de segurança, já que o DTO tenta mandar a senha, mas a gente precisa da senha no
+//        DTO para que a conta possa ser criada.
         dto.senha = "";
 
         dto.salario = funcionario.getSalario();
         dto.expediente = funcionario.getExpediente();
 
         dto.idEndereco = funcionario.getEndereco().getId();
+        dto.uf = funcionario.getEndereco().getUf();
+        dto.cidade = funcionario.getEndereco().getCidade();
+        dto.cep = funcionario.getEndereco().getCep();
+        dto.bairro = funcionario.getEndereco().getBairro();
         dto.logradouro = funcionario.getEndereco().getLogradouro();
         dto.numero = funcionario.getEndereco().getNumero();
         dto.complemento = funcionario.getEndereco().getComplemento();
-        dto.bairro = funcionario.getEndereco().getBairro();
-        dto.cidade = funcionario.getEndereco().getCidade();
-        dto.uf = funcionario.getEndereco().getUf();
-        dto.cep = funcionario.getEndereco().getCep();
 
         dto.idCargo = funcionario.getCargo().getId();
         dto.nomeCargo = funcionario.getCargo().getNome();
 
         dto.idFarmacia = funcionario.getFarmacia().getId();
         dto.nomeFarmacia = funcionario.getFarmacia().getNome();
+
         return dto;
     }
 }

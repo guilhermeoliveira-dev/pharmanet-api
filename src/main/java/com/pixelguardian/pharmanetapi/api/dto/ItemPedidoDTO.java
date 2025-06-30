@@ -43,6 +43,7 @@ public class ItemPedidoDTO {
     public static ItemPedidoDTO create(ItemPedido itemPedido) {
         ModelMapper modelMapper = new ModelMapper();
         ItemPedidoDTO dto = modelMapper.map(itemPedido, ItemPedidoDTO.class);
+
         dto.idEstoque = itemPedido.getEstoque().getId();
         dto.quantidadeEstoque = itemPedido.getEstoque().getQuantidade();
         dto.idProduto = itemPedido.getEstoque().getProduto().getId();
@@ -62,7 +63,7 @@ public class ItemPedidoDTO {
             dto.idEndereco = itemPedido.getPedidoCompra().getEndereco().getId();
         }
 
-        // Receitas podem ser nulas, é um campo opcional. Se não verificarmos dá nullPointerException
+//        Receitas podem ser nulas, é um campo opcional. Se não verificarmos dá nullPointerException
         if (itemPedido.getReceita() != null){
             dto.idReceita = itemPedido.getReceita().getId();
             dto.medico = itemPedido.getReceita().getMedico();
@@ -72,6 +73,7 @@ public class ItemPedidoDTO {
             dto.aprovado = itemPedido.getReceita().getAprovado();
             dto.idfuncionario = itemPedido.getReceita().getFuncionario().getId();
         }
+
         return dto;
     }
 }

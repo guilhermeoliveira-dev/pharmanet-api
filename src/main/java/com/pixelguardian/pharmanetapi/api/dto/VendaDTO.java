@@ -31,6 +31,7 @@ public class VendaDTO {
     public static VendaDTO create(Venda venda) {
         ModelMapper modelMapper = new ModelMapper();
         VendaDTO dto = modelMapper.map(venda, VendaDTO.class);
+
         dto.idPedidoCompra = venda.getPedidoCompra().getId();
         dto.codigo = venda.getPedidoCompra().getCodigo();
         dto.dataCriacao = venda.getPedidoCompra().getDataCriacao();
@@ -39,6 +40,7 @@ public class VendaDTO {
         dto.tipoEntrega = venda.getPedidoCompra().getTipoEntrega();
         dto.statusEntrega = venda.getPedidoCompra().getStatusEntrega();
         dto.dataEntrega = venda.getPedidoCompra().getDataEntrega();
+
         return dto;
     }
 }

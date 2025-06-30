@@ -32,15 +32,17 @@ public class PedidoCompraDTO {
     public static PedidoCompraDTO create(PedidoCompra pedidoCompra) {
         ModelMapper modelMapper = new ModelMapper();
         PedidoCompraDTO dto = modelMapper.map(pedidoCompra, PedidoCompraDTO.class);
+
         if (pedidoCompra.getEndereco() != null){
+            dto.uf = pedidoCompra.getEndereco().getUf();
+            dto.cidade = pedidoCompra.getEndereco().getCidade();
+            dto.cep = pedidoCompra.getEndereco().getCep();
+            dto.bairro = pedidoCompra.getEndereco().getBairro();
             dto.logradouro = pedidoCompra.getEndereco().getLogradouro();
             dto.numero = pedidoCompra.getEndereco().getNumero();
             dto.complemento = pedidoCompra.getEndereco().getComplemento();
-            dto.bairro = pedidoCompra.getEndereco().getBairro();
-            dto.cidade = pedidoCompra.getEndereco().getCidade();
-            dto.uf = pedidoCompra.getEndereco().getUf();
-            dto.cep = pedidoCompra.getEndereco().getCep();
         }
+
         return dto;
     }
 }

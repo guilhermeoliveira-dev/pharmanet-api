@@ -34,18 +34,19 @@ public class ClienteDTO {
         ModelMapper modelMapper = new ModelMapper();
         ClienteDTO dto = modelMapper.map(cliente, ClienteDTO.class);
 
-        // Para previnir falhas de segurança, já que o DTO tenta mandar a senha, mas a gente precisa da senha no
-        // DTO para que a conta possa ser criada.
+//        Para previnir falhas de segurança, já que o DTO tenta mandar a senha, mas a gente precisa da senha no
+//        DTO para que a conta possa ser criada.
         dto.senha = "";
 
         dto.idEndereco = cliente.getEndereco().getId();
+        dto.uf = cliente.getEndereco().getUf();
+        dto.cidade = cliente.getEndereco().getCidade();
+        dto.cep = cliente.getEndereco().getCep();
+        dto.bairro = cliente.getEndereco().getBairro();
         dto.logradouro = cliente.getEndereco().getLogradouro();
         dto.numero = cliente.getEndereco().getNumero();
         dto.complemento = cliente.getEndereco().getComplemento();
-        dto.bairro = cliente.getEndereco().getBairro();
-        dto.cidade = cliente.getEndereco().getCidade();
-        dto.uf = cliente.getEndereco().getUf();
-        dto.cep = cliente.getEndereco().getCep();
+
         return dto;
     }
 }
