@@ -16,7 +16,7 @@ public class FeedbackDTO {
     private Float nota;
 
     private Long idProduto;
-    private String nome;
+    private String nomeProduto;
 //    private String descricao;
 //    private Float preco;
 //    private NaoSei imagem;
@@ -25,17 +25,17 @@ public class FeedbackDTO {
 //    private Boolean generico;
 
     private Long idCliente;
-    private Float fidelidadePontos;
+    private Float fidelidadePontosCliente;
 
     public static FeedbackDTO create(Feedback feedback) {
         ModelMapper modelMapper = new ModelMapper();
         FeedbackDTO dto = modelMapper.map(feedback, FeedbackDTO.class);
 
         dto.idProduto = feedback.getProduto().getId();
-        dto.nome = feedback.getProduto().getNome();
+        dto.nomeProduto = feedback.getProduto().getNome();
 
         dto.idCliente = feedback.getCliente().getId();
-        dto.fidelidadePontos = feedback.getCliente().getFidelidadePontos();
+        dto.fidelidadePontosCliente = feedback.getCliente().getFidelidadePontos();
 
         return dto;
     }
