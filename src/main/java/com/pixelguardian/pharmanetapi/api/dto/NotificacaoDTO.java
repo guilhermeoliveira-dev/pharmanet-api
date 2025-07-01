@@ -14,12 +14,12 @@ public class NotificacaoDTO {
     private Long id;
 
     private Long idUsuario;
-    private String nome;
-    private String email;
-    private String senha;
-    private String cpf;
-    private String telefone;
-    private String dataAdmissao;
+//    private String nome;
+//    private String email;
+//    private String senha;
+//    private String cpf;
+//    private String telefone;
+//    private String dataAdmissao;
 
     private String mensagem;
     private String dataEnvio;
@@ -30,12 +30,12 @@ public class NotificacaoDTO {
         NotificacaoDTO dto = modelMapper.map(notificacao, NotificacaoDTO.class);
 
         dto.idUsuario = notificacao.getUsuario().getId();
-        dto.nome = notificacao.getUsuario().getNome();
-        dto.email = notificacao.getUsuario().getEmail();
-        dto.senha = notificacao.getUsuario().getSenha();
-        dto.cpf = notificacao.getUsuario().getCpf();
-        dto.telefone = notificacao.getUsuario().getTelefone();
-        dto.dataAdmissao = notificacao.getUsuario().getDataAdmissao();
+//        dto.nome = notificacao.getUsuario().getNome();
+//        dto.email = notificacao.getUsuario().getEmail();
+//        dto.senha = notificacao.getUsuario().getSenha();
+//        dto.cpf = notificacao.getUsuario().getCpf();
+//        dto.telefone = notificacao.getUsuario().getTelefone();
+//        dto.dataAdmissao = notificacao.getUsuario().getDataAdmissao();
 
         return dto;
     }
