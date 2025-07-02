@@ -6,9 +6,7 @@ import com.pixelguardian.pharmanetapi.model.entity.*;
 import com.pixelguardian.pharmanetapi.service.ClienteService;
 import com.pixelguardian.pharmanetapi.service.FuncionarioService;
 import com.pixelguardian.pharmanetapi.service.NotificacaoService;
-import com.pixelguardian.pharmanetapi.service.ProdutoService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +24,10 @@ public class NotificacaoController {
     private final NotificacaoService notificacaoService;
     private final ClienteService clienteService;
     private final FuncionarioService funcionarioService;
-    private final ProdutoService produtoService;
 
     @GetMapping("")
     public ResponseEntity get() {
-        List<Notificacao> notificacaos = notificacaoService.getNotificacaos();
+        List<Notificacao> notificacaos = notificacaoService.getNotificacoes();
         return ResponseEntity.ok(notificacaos.stream().map(NotificacaoDTO::create).collect(Collectors.toList()));
     }
 
@@ -57,7 +54,7 @@ public class NotificacaoController {
     @PutMapping("{id}")
     public ResponseEntity atualizar(@PathVariable("id") Long id, NotificacaoDTO dto) {
         if (!notificacaoService.getNotificacaoById(id).isPresent()) {
-            return new ResponseEntity("Notificacao não encontrado", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("Notificacao não encontrada", HttpStatus.NOT_FOUND);
         }
         try {
             Notificacao notificacao = converter(dto);
@@ -106,5 +103,4 @@ public class NotificacaoController {
         }
         return notificacao;
     }
-
 }

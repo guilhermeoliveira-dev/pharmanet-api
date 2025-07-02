@@ -15,7 +15,7 @@ public class EstoqueDTO {
     private Integer quantidade;
 
     private Long idProduto;
-    private String nomeProduto;
+    private String nome;
 //    private String descricao;
 //    private Float preco;
 //    private NaoSei imagem;
@@ -25,22 +25,35 @@ public class EstoqueDTO {
 
     private Long idFornecedor;
     private String nomeFornecedor;
-    private String cnpj;
-    private String email;
-    private String telefone;
+    private String cnpjFornecedor;
+    private String emailFornecedor;
+    private String telefoneFornecedor;
+
+    private Long idFarmacia;
+    private String cnpjFarmacia;
+    private String nomeFarmacia;
+    private String emailFarmacia;
+    private String telefoneFarmacia;
+    //private NaoSei imagemLogo;
 
     public static EstoqueDTO create(Estoque estoque) {
         ModelMapper modelMapper = new ModelMapper();
         EstoqueDTO dto = modelMapper.map(estoque, EstoqueDTO.class);
 
         dto.idProduto = estoque.getProduto().getId();
-        dto.nomeProduto = estoque.getProduto().getNome();
+        dto.nome = estoque.getProduto().getNome();
 
         dto.idFornecedor = estoque.getFornecedor().getId();
         dto.nomeFornecedor = estoque.getFornecedor().getNome();
-        dto.cnpj = estoque.getFornecedor().getCnpj();
-        dto.email  = estoque.getFornecedor().getEmail();
-        dto.telefone = estoque.getFornecedor().getTelefone();
+        dto.cnpjFornecedor = estoque.getFornecedor().getCnpj();
+        dto.emailFornecedor = estoque.getFornecedor().getEmail();
+        dto.telefoneFornecedor = estoque.getFornecedor().getTelefone();
+
+        dto.idFarmacia = estoque.getFarmacia().getId();
+        dto.nomeFarmacia = estoque.getFarmacia().getNome();
+        dto.cnpjFarmacia = estoque.getFarmacia().getCnpj();
+        dto.emailFarmacia = estoque.getFarmacia().getEmail();
+        dto.telefoneFarmacia = estoque.getFarmacia().getTelefone();
 
         return dto;
     }

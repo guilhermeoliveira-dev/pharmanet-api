@@ -3,7 +3,6 @@ package com.pixelguardian.pharmanetapi.api.controller;
 import com.pixelguardian.pharmanetapi.api.dto.FeedbackDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.Cliente;
-import com.pixelguardian.pharmanetapi.model.entity.Endereco;
 import com.pixelguardian.pharmanetapi.model.entity.Feedback;
 import com.pixelguardian.pharmanetapi.model.entity.Produto;
 import com.pixelguardian.pharmanetapi.service.ClienteService;
@@ -105,5 +104,4 @@ public class FeedbackController {
         }
         return feedback;
     }
-
 }

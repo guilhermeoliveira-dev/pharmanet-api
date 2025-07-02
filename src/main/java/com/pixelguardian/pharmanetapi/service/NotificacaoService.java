@@ -19,7 +19,7 @@ public class NotificacaoService {
         this.repository = repository;
     }
 
-    public List<Notificacao> getNotificacaos() {
+    public List<Notificacao> getNotificacoes() {
         return repository.findAll();
     }
 
