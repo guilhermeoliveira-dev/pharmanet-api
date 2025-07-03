@@ -48,6 +48,8 @@ public class FuncionarioController {
     public ResponseEntity post(FuncionarioDTO dto) {
         try {
             Funcionario funcionario = converter(dto);
+            Endereco endereco = enderecoService.salvar(funcionario.getEndereco());
+            funcionario.setEndereco(endereco);
             funcionario = funcionarioService.salvar(funcionario);
             return new ResponseEntity(funcionario, HttpStatus.CREATED);
         } catch (RegraNegocioException e) {
@@ -65,7 +67,7 @@ public class FuncionarioController {
             funcionario.setId(id);
             Endereco endereco = enderecoService.salvar(funcionario.getEndereco());
             funcionario.setEndereco(endereco);
-            funcionarioService.salvar(funcionario);
+            funcionario = funcionarioService.salvar(funcionario);
             return ResponseEntity.ok(funcionario);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -100,7 +102,6 @@ public class FuncionarioController {
 //            }
 //        }
         if (dto.getIdCargo() != null) {
-
             Optional<Cargo> cargo = cargoService.getCargoById(dto.getIdCargo());
             if (cargo.isPresent()) {
                 funcionario.setCargo(cargo.get());

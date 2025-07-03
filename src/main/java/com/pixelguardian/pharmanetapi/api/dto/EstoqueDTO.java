@@ -13,6 +13,10 @@ public class EstoqueDTO {
 
     private Long id;
     private Integer quantidade;
+    private String type; // Para o discriminador
+    private String lote;
+    private String dataFabricacao;
+    private String dataValidade;
 
     private Long idProduto;
     private String nome;
@@ -39,6 +43,17 @@ public class EstoqueDTO {
     public static EstoqueDTO create(Estoque estoque) {
         ModelMapper modelMapper = new ModelMapper();
         EstoqueDTO dto = modelMapper.map(estoque, EstoqueDTO.class);
+
+        // Mapeamento condicional para campos de EstoqueLote ao criar DTO de Entidade
+        if (estoque instanceof com.pixelguardian.pharmanetapi.model.entity.EstoqueLote) {
+            com.pixelguardian.pharmanetapi.model.entity.EstoqueLote estoqueLote = (com.pixelguardian.pharmanetapi.model.entity.EstoqueLote) estoque;
+            dto.setLote(estoqueLote.getLote());
+            dto.setDataFabricacao(estoqueLote.getDataFabricacao());
+            dto.setDataValidade(estoqueLote.getDataValidade());
+            dto.setType("estoqueLote"); // Definir o tipo para o DTO
+        } else {
+            dto.setType("estoque"); // Definir o tipo para o DTO
+        }
 
         dto.idProduto = estoque.getProduto().getId();
         dto.nome = estoque.getProduto().getNome();

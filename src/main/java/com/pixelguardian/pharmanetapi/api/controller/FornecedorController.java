@@ -4,6 +4,7 @@ import com.pixelguardian.pharmanetapi.api.dto.FornecedorDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.Endereco;
 import com.pixelguardian.pharmanetapi.model.entity.Fornecedor;
+import com.pixelguardian.pharmanetapi.service.EnderecoService;
 import com.pixelguardian.pharmanetapi.service.FornecedorService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class FornecedorController {
 
     private final FornecedorService fornecedorService;
+    private final EnderecoService enderecoService;
 
     @GetMapping("")
     public ResponseEntity get(){
@@ -42,6 +44,8 @@ public class FornecedorController {
     public ResponseEntity post(FornecedorDTO dto) {
         try {
             Fornecedor fornecedor = converter(dto);
+            Endereco endereco = enderecoService.salvar(fornecedor.getEndereco());
+            fornecedor.setEndereco(endereco);
             fornecedor = fornecedorService.salvar(fornecedor);
             return new ResponseEntity(fornecedor, HttpStatus.CREATED);
         } catch (RegraNegocioException e) {
@@ -57,6 +61,8 @@ public class FornecedorController {
         try {
             Fornecedor fornecedor = converter(dto);
             fornecedor.setId(id);
+            Endereco endereco = enderecoService.salvar(fornecedor.getEndereco());
+            fornecedor.setEndereco(endereco);
             fornecedorService.salvar(fornecedor);
             return ResponseEntity.ok(fornecedor);
         } catch (RegraNegocioException e) {
@@ -81,7 +87,17 @@ public class FornecedorController {
     private Fornecedor converter(FornecedorDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         Fornecedor fornecedor = modelMapper.map(dto, Fornecedor.class);
-        Endereco endereco = modelMapper.map(dto, Endereco.class);
+        Endereco endereco;
+        if (dto.getIdEndereco() != null && dto.getIdEndereco() != 0) {
+            Optional<Endereco> enderecoExistente = enderecoService.getEnderecoById(dto.getIdEndereco());
+            if (enderecoExistente.isPresent()) {
+                endereco = enderecoExistente.get();
+            } else {
+                throw new RegraNegocioException("Endereço com ID " + dto.getIdEndereco() + " não encontrado.");
+            }
+        } else {
+            endereco = modelMapper.map(dto, Endereco.class);
+        }
         fornecedor.setEndereco(endereco);
         return fornecedor;
     }

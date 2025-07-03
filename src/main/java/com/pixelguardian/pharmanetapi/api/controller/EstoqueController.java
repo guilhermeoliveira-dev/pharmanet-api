@@ -85,7 +85,12 @@ public class EstoqueController {
 
     private Estoque converter(EstoqueDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
-        Estoque estoque = modelMapper.map(dto, Estoque.class);
+        Estoque estoque;
+        if ("estoqueLote".equalsIgnoreCase(dto.getType())) {
+            estoque = modelMapper.map(dto, EstoqueLote.class);
+        } else {
+            estoque = modelMapper.map(dto, Estoque.class);
+        }
         if (dto.getIdProduto() != null) {
             Optional<Produto> produto = produtoService.getProdutoById((dto.getIdProduto()));
             if (produto.isPresent()) {

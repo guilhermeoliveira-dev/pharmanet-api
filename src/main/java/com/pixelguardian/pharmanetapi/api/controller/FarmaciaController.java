@@ -65,7 +65,7 @@ public class FarmaciaController {
             farmacia.setId(id);
             Endereco endereco = enderecoService.salvar(farmacia.getEndereco());
             farmacia.setEndereco(endereco);
-            farmaciaService.salvar(farmacia);
+            farmacia = farmaciaService.salvar(farmacia);
             return ResponseEntity.ok(farmacia);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
