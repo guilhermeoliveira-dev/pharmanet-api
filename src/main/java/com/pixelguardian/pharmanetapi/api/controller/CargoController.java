@@ -38,7 +38,7 @@ public class CargoController {
     }
 
     @PostMapping()
-    public ResponseEntity post(CargoDTO dto) {
+    public ResponseEntity post(@RequestBody CargoDTO dto) {
         try {
             Cargo cargo = converter(dto);
             cargo = cargoService.salvar(cargo);
@@ -49,7 +49,7 @@ public class CargoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, CargoDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody CargoDTO dto) {
         if (!cargoService.getCargoById(id).isPresent()) {
             return new ResponseEntity("Cargo não encontrado", HttpStatus.NOT_FOUND);
         }

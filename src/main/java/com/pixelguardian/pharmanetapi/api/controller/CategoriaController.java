@@ -39,7 +39,7 @@ public class CategoriaController {
     }
 
     @PostMapping()
-    public ResponseEntity post(CategoriaDTO dto) {
+    public ResponseEntity post(@RequestBody CategoriaDTO dto) {
         try {
             Categoria categoria = converter(dto);
             categoria = categoriaService.salvar(categoria);
@@ -50,7 +50,7 @@ public class CategoriaController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, CategoriaDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody CategoriaDTO dto) {
         if (!categoriaService.getCategoriaById(id).isPresent()) {
             return new ResponseEntity("Categoria não encontrada", HttpStatus.NOT_FOUND);
         }

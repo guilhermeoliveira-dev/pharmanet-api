@@ -41,7 +41,7 @@ public class PedidoCompraController {
     }
 
     @PostMapping()
-    public ResponseEntity post(PedidoCompraDTO dto) {
+    public ResponseEntity post(@RequestBody PedidoCompraDTO dto) {
         try {
             PedidoCompra pedidoCompra = converter(dto);
             pedidoCompra = pedidoCompraService.salvar(pedidoCompra);
@@ -52,7 +52,7 @@ public class PedidoCompraController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, PedidoCompraDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody PedidoCompraDTO dto) {
         if (!pedidoCompraService.getPedidoCompraById(id).isPresent()) {
             return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
         }

@@ -44,7 +44,7 @@ public class ItemPedidoController {
     }
 
     @PostMapping()
-    public ResponseEntity post(ItemPedidoDTO dto) {
+    public ResponseEntity post(@RequestBody ItemPedidoDTO dto) {
         try {
             ItemPedido itemPedido = converter(dto);
             itemPedido = itemPedidoService.salvar(itemPedido);
@@ -55,7 +55,7 @@ public class ItemPedidoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, ItemPedidoDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody ItemPedidoDTO dto) {
         if (!itemPedidoService.getItemPedidoById(id).isPresent()) {
             return new ResponseEntity("ItemPedido não encontrado", HttpStatus.NOT_FOUND);
         }

@@ -44,7 +44,7 @@ public class FeedbackController {
     }
 
     @PostMapping()
-    public ResponseEntity post(FeedbackDTO dto) {
+    public ResponseEntity post(@RequestBody FeedbackDTO dto) {
         try {
             Feedback feedback = converter(dto);
             feedback = feedbackService.salvar(feedback);
@@ -55,7 +55,7 @@ public class FeedbackController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, FeedbackDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody FeedbackDTO dto) {
         if (!feedbackService.getFeedbackById(id).isPresent()) {
             return new ResponseEntity("Feedback não encontrado", HttpStatus.NOT_FOUND);
         }

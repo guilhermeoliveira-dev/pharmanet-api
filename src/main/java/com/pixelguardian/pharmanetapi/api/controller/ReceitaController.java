@@ -40,7 +40,7 @@ public class ReceitaController {
     }
 
     @PostMapping()
-    public ResponseEntity post(ReceitaDTO dto) {
+    public ResponseEntity post(@RequestBody ReceitaDTO dto) {
         try {
             Receita receita = converter(dto);
             receita = receitaService.salvar(receita);
@@ -51,7 +51,7 @@ public class ReceitaController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, ReceitaDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody ReceitaDTO dto) {
         if (!receitaService.getReceitaById(id).isPresent()) {
             return new ResponseEntity("Receita não encontrada", HttpStatus.NOT_FOUND);
         }

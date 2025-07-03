@@ -41,7 +41,7 @@ public class NotificacaoController {
     }
 
     @PostMapping()
-    public ResponseEntity post(NotificacaoDTO dto) {
+    public ResponseEntity post(@RequestBody NotificacaoDTO dto) {
         try {
             Notificacao notificacao = converter(dto);
             notificacao = notificacaoService.salvar(notificacao);
@@ -52,7 +52,7 @@ public class NotificacaoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, NotificacaoDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody NotificacaoDTO dto) {
         if (!notificacaoService.getNotificacaoById(id).isPresent()) {
             return new ResponseEntity("Notificacao não encontrada", HttpStatus.NOT_FOUND);
         }
