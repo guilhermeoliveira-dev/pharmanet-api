@@ -15,7 +15,7 @@ public class PagamentoDTO {
     private String dataPagamento;
     private Float valor;
     private String formaPagamento;
-    //private NaoSei comprovante;
+//    private NaoSei comprovante;
 
     public static PagamentoDTO create(Pagamento pagamento) {
         ModelMapper modelMapper = new ModelMapper();

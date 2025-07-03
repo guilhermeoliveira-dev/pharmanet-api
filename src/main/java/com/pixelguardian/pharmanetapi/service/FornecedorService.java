@@ -53,7 +53,7 @@ public class FornecedorService {
             throw new RegraNegocioException("Telefone inválido");
         }
         if (fornecedor.getEndereco() == null || fornecedor.getEndereco().getId() == null || fornecedor.getEndereco().getId() == 0) {
-            throw new RegraNegocioException("Fonecedor inválido");
+            throw new RegraNegocioException("Fornecedor inválido");
         }
     }
 }

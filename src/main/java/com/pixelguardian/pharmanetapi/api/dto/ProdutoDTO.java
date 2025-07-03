@@ -15,7 +15,7 @@ public class ProdutoDTO {
     private String nome;
     private String descricao;
     private Float preco;
-    //private NaoSei imagem;
+//    private NaoSei imagem;
     private Boolean requerLote;
     private Float peso;
     private Boolean generico;
@@ -29,12 +29,13 @@ public class ProdutoDTO {
     private Long idCategoria;
     private String nomeCategoria;
     private String descricaoCategoria;
-    //Descenecessário pro produto, e causa problemas
+//    Descenecessário pro produto, e causa problemas
 //    private Long idCategoriaPai;
 
     public static ProdutoDTO create(Produto produto) {
         ModelMapper modelMapper = new ModelMapper();
         ProdutoDTO dto = modelMapper.map(produto, ProdutoDTO.class);
+
         dto.idTarja = produto.getTarja().getId();
         dto.nomeTarja = produto.getTarja().getNome();
         dto.cor = produto.getTarja().getCor();
@@ -45,6 +46,7 @@ public class ProdutoDTO {
         dto.nomeCategoria = produto.getCategoria().getNome();
         dto.descricaoCategoria = produto.getCategoria().getDescricao();
 //        dto.idCategoriaPai = produto.getCategoria().getCategoriaPai().getId();
+
         return dto;
     }
 }

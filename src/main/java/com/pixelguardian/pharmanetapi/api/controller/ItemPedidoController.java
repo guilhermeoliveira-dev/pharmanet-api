@@ -86,7 +86,6 @@ public class ItemPedidoController {
     public ItemPedido converter(ItemPedidoDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         ItemPedido itemPedido = modelMapper.map(dto, ItemPedido.class);
-
         if (dto.getIdReceita() != null && dto.getIdReceita() != 0){
             Optional<Receita> receita = receitaService.getReceitaById(dto.getIdReceita());
             if (receita.isPresent()){
@@ -96,7 +95,6 @@ public class ItemPedidoController {
                 itemPedido.setReceita(null);
             }
         }
-
         if (dto.getIdEstoque() != null && dto.getIdEstoque() != 0) {
             Optional<Estoque> estoque = estoqueService.getEstoqueById((dto.getIdEstoque()));
             if (estoque.isPresent()) {
@@ -113,7 +111,6 @@ public class ItemPedidoController {
                 itemPedido.setPedidoCompra(null);
             }
         }
-
         return itemPedido;
     }
 }

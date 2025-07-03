@@ -46,6 +46,8 @@ public class ClienteController {
     public ResponseEntity post(ClienteDTO dto) {
         try {
             Cliente cliente = converter(dto);
+            Endereco endereco = enderecoService.salvar(cliente.getEndereco());
+            cliente.setEndereco(endereco);
             cliente = clienteService.salvar(cliente);
             return new ResponseEntity(cliente, HttpStatus.CREATED);
         } catch (RegraNegocioException e) {
@@ -63,7 +65,7 @@ public class ClienteController {
             cliente.setId(id);
             Endereco endereco = enderecoService.salvar(cliente.getEndereco());
             cliente.setEndereco(endereco);
-            clienteService.salvar(cliente);
+            cliente = clienteService.salvar(cliente);
             return ResponseEntity.ok(cliente);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
