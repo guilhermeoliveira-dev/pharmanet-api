@@ -46,6 +46,8 @@ public class FarmaciaController {
     public ResponseEntity post(FarmaciaDTO dto) {
         try {
             Farmacia farmacia = converter(dto);
+            Endereco endereco = enderecoService.salvar(farmacia.getEndereco());
+            farmacia.setEndereco(endereco);
             farmacia = farmaciaService.salvar(farmacia);
             return new ResponseEntity(farmacia, HttpStatus.CREATED);
         } catch (RegraNegocioException e) {
