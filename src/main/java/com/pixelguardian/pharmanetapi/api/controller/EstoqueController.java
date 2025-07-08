@@ -44,7 +44,7 @@ public class EstoqueController {
     }
 
     @PostMapping()
-    public ResponseEntity post(EstoqueDTO dto) {
+    public ResponseEntity post(@RequestBody EstoqueDTO dto) {
         try {
             Estoque estoque = converter(dto);
             estoque = estoqueService.salvar(estoque);
@@ -55,7 +55,7 @@ public class EstoqueController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, EstoqueDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody EstoqueDTO dto) {
         if (!estoqueService.getEstoqueById(id).isPresent()) {
             return new ResponseEntity("Estoque não encontrado", HttpStatus.NOT_FOUND);
         }

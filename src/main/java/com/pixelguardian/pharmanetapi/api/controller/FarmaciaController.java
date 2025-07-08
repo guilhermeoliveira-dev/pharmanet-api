@@ -43,7 +43,7 @@ public class FarmaciaController {
     }
 
     @PostMapping()
-    public ResponseEntity post(FarmaciaDTO dto) {
+    public ResponseEntity post(@RequestBody FarmaciaDTO dto) {
         try {
             Farmacia farmacia = converter(dto);
             Endereco endereco = enderecoService.salvar(farmacia.getEndereco());
@@ -56,7 +56,7 @@ public class FarmaciaController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, FarmaciaDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody FarmaciaDTO dto) {
         if (!farmaciaService.getFarmaciaById(id).isPresent()) {
             return new ResponseEntity("Farmácia não encontrada", HttpStatus.NOT_FOUND);
         }

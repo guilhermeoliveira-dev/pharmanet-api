@@ -40,7 +40,7 @@ public class PagamentoController {
     }
 
     @PostMapping()
-    public ResponseEntity post(PagamentoDTO dto) {
+    public ResponseEntity post(@RequestBody PagamentoDTO dto) {
         try {
             Pagamento pagamento = converter(dto);
             pagamento = pagamentoService.salvar(pagamento);
@@ -51,7 +51,7 @@ public class PagamentoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, PagamentoDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody PagamentoDTO dto) {
         if (!pagamentoService.getPagamentoById(id).isPresent()) {
             return new ResponseEntity("Pagamento não encontrado", HttpStatus.NOT_FOUND);
         }

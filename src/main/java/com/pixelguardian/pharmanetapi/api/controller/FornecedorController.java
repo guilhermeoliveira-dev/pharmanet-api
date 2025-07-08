@@ -41,7 +41,7 @@ public class FornecedorController {
     }
 
     @PostMapping()
-    public ResponseEntity post(FornecedorDTO dto) {
+    public ResponseEntity post(@RequestBody FornecedorDTO dto) {
         try {
             Fornecedor fornecedor = converter(dto);
             Endereco endereco = enderecoService.salvar(fornecedor.getEndereco());
@@ -54,7 +54,7 @@ public class FornecedorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity atualizar(@PathVariable("id") Long id, FornecedorDTO dto) {
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody FornecedorDTO dto) {
         if (!fornecedorService.getFornecedorById(id).isPresent()) {
             return new ResponseEntity("Fornecedor não encontrado", HttpStatus.NOT_FOUND);
         }
