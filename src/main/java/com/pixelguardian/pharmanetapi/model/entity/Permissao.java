@@ -19,6 +19,6 @@ public class Permissao {
 
     private String nome;
 
-    @ManyToOne
-    private Cargo cargo;
+//    @ManyToOne
+//    private Cargo cargo;
 }

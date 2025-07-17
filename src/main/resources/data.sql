@@ -13,6 +13,7 @@ truncate table notificacao restart identity cascade;
 truncate table pagamento restart identity cascade;
 truncate table pedido_compra restart identity cascade;
 truncate table permissao restart identity cascade;
+truncate table permissao_individual restart identity cascade;
 truncate table produto restart identity cascade;
 truncate table receita restart identity cascade;
 truncate table tarja restart identity cascade;
@@ -44,12 +45,18 @@ VALUES ('Farmacêutico'),
 
 -- Permissões
 INSERT INTO public.permissao
-    (nome, cargo_id)
-VALUES ('Cadastrar Produtos', 1),
-       ('Cadastrar Produtos', 2),
-       ('Cadastrar Funcionários', 2),
-       ('Cadastrar Funcionários', 3),
-       ('Cadastrar Farmácias', 3);
+    (nome)
+VALUES ('Cadastrar Produtos'),
+       ('Cadastrar Funcionários'),
+       ('Cadastrar Farmácias');
+
+INSERT INTO public.permissao_individual
+    (permissao_id, cargo_id, tem_permissao)
+VALUES (1, 1, true),
+       (1, 2, true),
+       (2, 2, true),
+       (2, 3, true),
+       (3, 3, true);
 
 -- Categorias
 INSERT INTO public.categoria

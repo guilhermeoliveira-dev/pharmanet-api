@@ -1,29 +1,33 @@
 package com.pixelguardian.pharmanetapi.model.entity;
 
+import jdk.jfr.Relational;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Entity
 @AllArgsConstructor
-public class Cargo {
+@Entity
+public class PermissaoIndividual {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    @ManyToOne
+    private Cargo cargo;
 
-    @OneToMany(mappedBy = "cargo")
-    @ToString.Exclude
-    private List<PermissaoIndividual> permissoes;
+    @ManyToOne
+    private Permissao permissao;
+
+    private Boolean temPermissao = false;
 
     @Override
     public final boolean equals(Object o) {
@@ -32,8 +36,8 @@ public class Cargo {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Cargo cargo = (Cargo) o;
-        return getId() != null && Objects.equals(getId(), cargo.getId());
+        PermissaoIndividual that = (PermissaoIndividual) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override

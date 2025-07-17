@@ -43,8 +43,8 @@ public class PermissaoService {
         if (permissao.getNome() == null || permissao.getNome().trim().equals("")) {
             throw new RegraNegocioException("Nome inválido");
         }
-        if (permissao.getCargo() == null || permissao.getCargo().getId() == null || permissao.getCargo().getId() == 0) {
-            throw new RegraNegocioException("Produto inválido");
-        }
+//        if (permissao.getCargo() == null || permissao.getCargo().getId() == null || permissao.getCargo().getId() == 0) {
+//            throw new RegraNegocioException("Cargo inválido");
+//        }
     }
 }
