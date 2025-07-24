@@ -60,7 +60,7 @@ VALUES (1, 1, true),
 
 -- Categorias
 INSERT INTO public.categoria
-    (descricao, nome, categoria_pai_id)
+    (nome, descricao, categoria_pai_id)
 VALUES ('Medicamento', 'Medicamentos no geral.', null),
        ('Produto Alimentício', 'Produtos alimentícios em geral.', null),
        ('Betabloqueadores', 'Calmantes.', 1),
