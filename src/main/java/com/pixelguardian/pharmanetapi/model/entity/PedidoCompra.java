@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,11 +20,13 @@ public class PedidoCompra {
     private String codigo;
     private String dataCriacao;
     private String status;
-    private Float valorTotal;
     private String tipoEntrega;
     private String statusEntrega;
     private String dataEntrega;
 
     @ManyToOne
     private Endereco endereco;
+
+    @OneToMany(mappedBy = "pedidoCompra", fetch = FetchType.LAZY)
+    private List<ItemPedido> itensPedido;
 }

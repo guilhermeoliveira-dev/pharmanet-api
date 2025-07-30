@@ -74,7 +74,7 @@ INSERT INTO public.tarja
 VALUES ('Vermelha', 'Vermelha sem Retenção', true, false),
        ('Vermelha', 'Vermelha com Retenção', true, true),
        ('Preta', 'Preta', true, true),
-       ('Sem Tarja', '', false, false);
+       ('Sem Tarja', 'Sem Tarja', false, false);
 
 -- Produtos
 INSERT INTO public.produto
@@ -104,7 +104,7 @@ VALUES ('estoqueLote', 10, '10-10-2024', '28-02-2025', '10-2024-0038', 1, 1, 1),
 -- Clientes
 WITH novo_usuario AS (
     INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-        VALUES ('11111111111', '2014-11-11', 'usuario01@gmail.com', 'usuario01 da silva', '1dasilva', '1111-1111', 1)
+        VALUES ('11111111111', '11-11-2014', 'usuario01@gmail.com', 'usuario01 da silva', '1dasilva', '1111-1111', 1)
         RETURNING id)
 INSERT
 INTO public.cliente (usuario_id, fidelidade_pontos)
@@ -160,10 +160,10 @@ FROM novo_usuario;
 
 -- Pedidos de Compra
 INSERT INTO public.pedido_compra
-(codigo, data_criacao, data_entrega, status, status_entrega, tipo_entrega, valor_total, endereco_id)
-VALUES ('20241113000000', '13-11-2024', '19-11-2024', 'finalizado', 'entregue', 'delivery', 150, 2),
-       ('20241113000001', '13-11-2024', '', 'entrega pendente', 'pendente', 'busca no estabelecimento', 71.98, null),
-       ('20241113000002', '13-11-2024', '', 'pagamento pendente', 'pendente', 'delivery', 17.98, 1);
+(codigo, data_criacao, data_entrega, status, status_entrega, tipo_entrega, endereco_id)
+VALUES ('20241113000000', '13-11-2024', '19-11-2024', 'finalizado', 'entregue', 'delivery', 2),
+       ('20241113000001', '13-11-2024', '', 'entrega pendente', 'pendente', 'busca no estabelecimento', null),
+       ('20241113000002', '13-11-2024', '', 'pagamento pendente', 'pendente', 'delivery', 1);
 
 -- Receitas
 INSERT INTO public.receita(medico, data_emissao, validade, item_prescrito, aprovado, funcionario_usuario_id)

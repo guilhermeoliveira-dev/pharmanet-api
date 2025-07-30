@@ -55,7 +55,6 @@ public class ItemPedidoDTO {
         dto.codigo = itemPedido.getPedidoCompra().getCodigo();
         dto.dataCriacao = itemPedido.getPedidoCompra().getDataCriacao();
         dto.status = itemPedido.getPedidoCompra().getStatus();
-        dto.valorTotal = itemPedido.getPedidoCompra().getValorTotal();
         dto.tipoEntrega = itemPedido.getPedidoCompra().getTipoEntrega();
         dto.statusEntrega = itemPedido.getPedidoCompra().getStatusEntrega();
         dto.dataEntrega = itemPedido.getPedidoCompra().getDataEntrega();

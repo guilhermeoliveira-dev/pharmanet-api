@@ -13,12 +13,10 @@ public class VendaDTO {
 
     private Long id;
     private String dataVenda;
-
     private Long idPagamento;
     private String dataPagamento;
     private Float valor;
     private String formaPagamento;
-
     private Long idPedidoCompra;
     private String codigo;
     private String dataCriacao;
@@ -31,16 +29,21 @@ public class VendaDTO {
     public static VendaDTO create(Venda venda) {
         ModelMapper modelMapper = new ModelMapper();
         VendaDTO dto = modelMapper.map(venda, VendaDTO.class);
-
-        dto.idPedidoCompra = venda.getPedidoCompra().getId();
-        dto.codigo = venda.getPedidoCompra().getCodigo();
-        dto.dataCriacao = venda.getPedidoCompra().getDataCriacao();
-        dto.status = venda.getPedidoCompra().getStatus();
-        dto.valorTotal = venda.getPedidoCompra().getValorTotal();
-        dto.tipoEntrega = venda.getPedidoCompra().getTipoEntrega();
-        dto.statusEntrega = venda.getPedidoCompra().getStatusEntrega();
-        dto.dataEntrega = venda.getPedidoCompra().getDataEntrega();
-
+        if (venda.getPagamento() != null) {
+            dto.idPagamento = venda.getPagamento().getId();
+            dto.dataPagamento = venda.getPagamento().getDataPagamento();
+            dto.valor = venda.getPagamento().getValor();
+            dto.formaPagamento = venda.getPagamento().getFormaPagamento();
+        }
+        if (venda.getPedidoCompra() != null) {
+            dto.idPedidoCompra = venda.getPedidoCompra().getId();
+            dto.codigo = venda.getPedidoCompra().getCodigo();
+            dto.dataCriacao = venda.getPedidoCompra().getDataCriacao();
+            dto.status = venda.getPedidoCompra().getStatus();
+            dto.tipoEntrega = venda.getPedidoCompra().getTipoEntrega();
+            dto.statusEntrega = venda.getPedidoCompra().getStatusEntrega();
+            dto.dataEntrega = venda.getPedidoCompra().getDataEntrega();
+        }
         return dto;
     }
 }

@@ -1,6 +1,7 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.ProdutoDTO;
+import com.pixelguardian.pharmanetapi.api.dto.TarjaDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.*;
 import com.pixelguardian.pharmanetapi.service.CategoriaService;
@@ -30,6 +31,12 @@ public class ProdutoController {
     public ResponseEntity get() {
         List<Produto> produtos = produtoService.getProdutos();
         return ResponseEntity.ok(produtos.stream().map(ProdutoDTO::create).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/tarjas")
+    public ResponseEntity getTarjas() {
+        List<Tarja> tarjas = tarjaService.getTarjas();
+        return ResponseEntity.ok(tarjas.stream().map(TarjaDTO::create).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")

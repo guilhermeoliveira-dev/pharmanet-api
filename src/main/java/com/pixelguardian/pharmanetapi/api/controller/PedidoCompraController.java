@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +29,13 @@ public class PedidoCompraController {
     @GetMapping()
     public ResponseEntity get() {
         List<PedidoCompra> pedidoCompras = pedidoCompraService.getPedidoCompras();
-        return ResponseEntity.ok(pedidoCompras.stream().map(PedidoCompraDTO::create).collect(Collectors.toList()));
+        List<PedidoCompraDTO> dtos = new ArrayList<>();
+        for (PedidoCompra pedidoCompra : pedidoCompras) {
+            PedidoCompraDTO dto = PedidoCompraDTO.create(pedidoCompra);
+            dto.setValorTotal(pedidoCompraService.calcularValorTotal(pedidoCompra));
+            dtos.add(dto);
+        }
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
@@ -37,7 +44,9 @@ public class PedidoCompraController {
         if (!pedidoCompra.isPresent()) {
             return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(pedidoCompra.map(PedidoCompraDTO::create));
+        PedidoCompraDTO dto = PedidoCompraDTO.create(pedidoCompra.get());
+        dto.setValorTotal(pedidoCompraService.calcularValorTotal(pedidoCompra.get()));
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping()
@@ -68,12 +77,8 @@ public class PedidoCompraController {
 
     @DeleteMapping("{id}")
     public ResponseEntity excluir(@PathVariable("id") Long id) {
-        Optional<PedidoCompra> pedidoCompra = pedidoCompraService.getPedidoCompraById(id);
-        if (!pedidoCompra.isPresent()) {
-            return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
-        }
         try {
-            pedidoCompraService.excluir(pedidoCompra.get());
+            pedidoCompraService.excluir(id);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
