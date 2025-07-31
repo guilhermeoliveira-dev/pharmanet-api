@@ -1,5 +1,6 @@
 package com.pixelguardian.pharmanetapi.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -21,6 +22,7 @@ public class Cargo {
 
     private String nome;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "cargo")
     @ToString.Exclude
     private List<PermissaoIndividual> permissoes;

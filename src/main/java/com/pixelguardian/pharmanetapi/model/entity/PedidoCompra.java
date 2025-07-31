@@ -1,5 +1,6 @@
 package com.pixelguardian.pharmanetapi.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,10 @@ public class PedidoCompra {
     @ManyToOne
     private Endereco endereco;
 
+    @ManyToOne
+    private Usuario usuario;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "pedidoCompra", fetch = FetchType.LAZY)
     private List<ItemPedido> itensPedido;
 }
