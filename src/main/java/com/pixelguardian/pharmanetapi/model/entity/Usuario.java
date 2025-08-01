@@ -11,7 +11,6 @@ import java.util.List;
 
 @Data
 @Entity
-@Builder
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor

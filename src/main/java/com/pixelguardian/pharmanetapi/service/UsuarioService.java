@@ -38,9 +38,9 @@ public class UsuarioService implements UserDetailsService {
         return repository.save(usuario);
     }
 
-    public UserDetails autenticar(Usuario usuario){
-        UserDetails user = loadUserByUsername(usuario.getEmail());
-        boolean senhasBatem = encoder.matches(usuario.getSenha(), user.getPassword());
+    public UserDetails autenticar(String email, String senha){
+        UserDetails user = loadUserByUsername(email);
+        boolean senhasBatem = encoder.matches(senha, user.getPassword());
 
         if (senhasBatem){
             return user;
@@ -48,11 +48,16 @@ public class UsuarioService implements UserDetailsService {
         throw new SenhaInvalidaException();
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Usuario usuario = repository.findByEmail(username)
+    public Usuario getUsuarioByEmail(String email){
+        Usuario usuario = repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        return usuario;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        Usuario usuario = getUsuarioByEmail(email);
 
         String[] roles = usuario.getRoles().toArray(new String[0]);
 

@@ -70,10 +70,10 @@ public class UsuarioController {
     @PostMapping("/auth")
     public TokenDTO autenticar(@RequestBody CredenciaisDTO credenciais){
         try{
-            Usuario usuario = Usuario.builder()
-                    .email(credenciais.getEmail())
-                    .senha(credenciais.getSenha()).build();
-            UserDetails usuarioAutenticado = usuarioService.autenticar(usuario);
+            Usuario usuario = usuarioService.getUsuarioByEmail(credenciais.getEmail());
+
+
+            UserDetails usuarioAutenticado = usuarioService.autenticar(credenciais.getEmail(), credenciais.getSenha());
             String token = jwtService.gerarToken(usuario);
             return new TokenDTO(usuario.getEmail(), token);
         } catch (UsernameNotFoundException | SenhaInvalidaException e ){
