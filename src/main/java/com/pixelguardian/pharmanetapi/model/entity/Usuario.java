@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -27,4 +29,7 @@ public abstract class Usuario {
 
     @OneToOne
     private Endereco endereco;
+
+    public abstract List<String> getRoles();
+
 }

@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@PrimaryKeyJoinColumn(name = "usuario_id") // Define o nome da coluna de join
+@PrimaryKeyJoinColumn(name = "usuario_id")
 public class Funcionario extends Usuario{
 
 //    @Id
@@ -24,4 +26,18 @@ public class Funcionario extends Usuario{
 
     @ManyToOne
     private Farmacia farmacia;
+
+    @Override
+    @ElementCollection
+    public List<String> getRoles() {
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        for(PermissaoIndividual permissao : cargo.getPermissoes()){
+            if (permissao.getTemPermissao() &&
+                    permissao.getPermissao().getNome().equals("Administrador")){
+                roles.add("ADMIN");
+            }
+        }
+        return roles;
+    }
 }
