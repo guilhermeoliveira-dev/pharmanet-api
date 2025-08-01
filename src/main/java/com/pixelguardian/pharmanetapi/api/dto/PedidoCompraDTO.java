@@ -1,10 +1,14 @@
 package com.pixelguardian.pharmanetapi.api.dto;
 
+import com.pixelguardian.pharmanetapi.model.entity.ItemPedido;
 import com.pixelguardian.pharmanetapi.model.entity.PedidoCompra;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -29,6 +33,8 @@ public class PedidoCompraDTO {
     private String numero;
     private String complemento;
 
+    private List<ItemPedidoDTO> pedidos;
+
     public static PedidoCompraDTO create(PedidoCompra pedidoCompra) {
         ModelMapper modelMapper = new ModelMapper();
         PedidoCompraDTO dto = modelMapper.map(pedidoCompra, PedidoCompraDTO.class);
@@ -41,6 +47,13 @@ public class PedidoCompraDTO {
             dto.logradouro = pedidoCompra.getEndereco().getLogradouro();
             dto.numero = pedidoCompra.getEndereco().getNumero();
             dto.complemento = pedidoCompra.getEndereco().getComplemento();
+        }
+
+        dto.pedidos = new ArrayList<ItemPedidoDTO>();
+        for(ItemPedido item : pedidoCompra.getItensPedido()){
+
+            dto.pedidos.add(ItemPedidoDTO.create(item));
+
         }
 
         return dto;
