@@ -58,7 +58,7 @@ public class FuncionarioService {
         if (funcionario.getEndereco() == null || funcionario.getEndereco().getId() == null || funcionario.getEndereco().getId() == 0) {
             throw new RegraNegocioException("Endereço inválido");
         }
-        if (funcionario.getSalario() == null) {
+        if (funcionario.getSalario() == null || funcionario.getSalario() < 0) {
             //TODO: salário == 0 é exception? fiquei na duvida se isso faz sentido
             //  || funcionario.getSalario() == 0
             throw new RegraNegocioException("Salário inválido");
