@@ -21,6 +21,8 @@ public class RandomNumberGeneratorTest {
 
             codigos[i] = rng.gerarAlphaNumericoSeisDigitos();
 
+            System.out.println(codigos[i]);
+
             for (int j = 0; j < n; j++){
 
                 if (i == j || codigos[j] != null || codigos[i] == null){

@@ -32,17 +32,17 @@ public class RandomNumberGenerator {
     }
 
     private String gerarAlphaNumericoNDigitos(int n){
-        if (n <= 0){
-            return "";
-        }
+        StringBuilder builder = new StringBuilder();
 
-        char[] caracteres = new char[n];
+        if (n <= 0){
+            return builder.toString();
+        }
 
         for (int i = 0; i < n; i++){
-            caracteres[i] = ALPHANUMERIC_CHARS.charAt(secureRng.nextInt(ALPHANUMERIC_CHARS.length()));
+           builder.append(ALPHANUMERIC_CHARS.charAt(secureRng.nextInt(ALPHANUMERIC_CHARS.length())));
         }
 
-        return Arrays.toString(caracteres);
+        return builder.toString();
     }
 
     public String gerarAlphaNumericoSeisDigitos(){
