@@ -2,6 +2,7 @@ package com.pixelguardian.pharmanetapi.service;
 
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.Estoque;
+import com.pixelguardian.pharmanetapi.model.entity.Produto;
 import com.pixelguardian.pharmanetapi.model.repository.EstoqueRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,10 @@ public class EstoqueService {
     public void excluir(Estoque estoque) {
         Objects.requireNonNull(estoque.getId());
         repository.delete(estoque);
+    }
+
+    public List<Estoque> findEstoqueByProduto(Produto produto){
+        return repository.findEstoqueByProduto(produto);
     }
 
     public void validar(Estoque estoque) {

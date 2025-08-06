@@ -7,6 +7,7 @@ import com.pixelguardian.pharmanetapi.service.EstoqueService;
 import com.pixelguardian.pharmanetapi.service.FarmaciaService;
 import com.pixelguardian.pharmanetapi.service.FornecedorService;
 import com.pixelguardian.pharmanetapi.service.ProdutoService;
+import com.pixelguardian.pharmanetapi.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class EstoqueController {
     private final FarmaciaService farmaciaService;
 
     @GetMapping("")
-    public ResponseEntity get(){
+    public ResponseEntity get() {
         List<Estoque> estoques = estoqueService.getEstoques();
         return ResponseEntity.ok(estoques.stream().map(EstoqueDTO::create).collect(Collectors.toList()));
     }
@@ -86,18 +87,22 @@ public class EstoqueController {
     private Estoque converter(EstoqueDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         Estoque estoque;
-        if ("estoqueLote".equalsIgnoreCase(dto.getType())) {
-            estoque = modelMapper.map(dto, EstoqueLote.class);
-        } else {
-            estoque = modelMapper.map(dto, Estoque.class);
+
+        if (dto.getIdProduto() == null){
+            return null;
         }
-        if (dto.getIdProduto() != null) {
-            Optional<Produto> produto = produtoService.getProdutoById((dto.getIdProduto()));
-            if (produto.isPresent()) {
-                estoque.setProduto(produto.get());
+        Optional<Produto> produto = produtoService.getProdutoById((dto.getIdProduto()));
+        if (produto.isPresent()) {
+            if (produto.get().getRequerLote()) {
+                estoque = modelMapper.map(dto, EstoqueLote.class);
+                ((EstoqueLote) estoque).setDataFabricacao(DateUtil.converterISO(dto.getDataFabricacao()));
+                ((EstoqueLote) estoque).setDataValidade(DateUtil.converterISO(dto.getDataValidade()));
             } else {
-                estoque.setProduto(null);
+                estoque = modelMapper.map(dto, Estoque.class);
             }
+            estoque.setProduto(produto.get());
+        } else {
+            return null;
         }
         if (dto.getIdFornecedor() != null) {
             Optional<Fornecedor> fornecedor = fornecedorService.getFornecedorById((dto.getIdFornecedor()));
