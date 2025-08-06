@@ -32,6 +32,6 @@ public class PedidoCompra {
     private Usuario usuario;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "pedidoCompra", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pedidoCompra")
     private List<ItemPedido> itensPedido;
 }

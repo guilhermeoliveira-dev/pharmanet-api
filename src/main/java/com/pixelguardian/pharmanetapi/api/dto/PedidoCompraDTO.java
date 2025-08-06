@@ -33,6 +33,8 @@ public class PedidoCompraDTO {
     private String numero;
     private String complemento;
 
+    private Long idUsuario;
+
     private List<ItemPedidoDTO> pedidos;
 
     public static PedidoCompraDTO create(PedidoCompra pedidoCompra) {

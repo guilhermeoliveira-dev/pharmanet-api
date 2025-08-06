@@ -11,12 +11,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import com.pixelguardian.pharmanetapi.util.DateFormatter;
+import com.pixelguardian.pharmanetapi.util.DateUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -96,7 +94,7 @@ public class PedidoCompraService {
     public String gerarCodigo(){
         String data, codigo;
 
-        data = DateFormatter.formatarData(LocalDate.now());
+        data = DateUtil.formatarColadoReverso(LocalDate.now());
 
         RandomNumberGenerator rng = RandomNumberGenerator.getRng();
 
