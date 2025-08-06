@@ -5,13 +5,18 @@ import com.pixelguardian.pharmanetapi.model.entity.ItemPedido;
 import com.pixelguardian.pharmanetapi.model.entity.PedidoCompra;
 import com.pixelguardian.pharmanetapi.model.repository.ItemPedidoRepository;
 import com.pixelguardian.pharmanetapi.model.repository.PedidoCompraRepository;
+import com.pixelguardian.pharmanetapi.util.RandomNumberGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import com.pixelguardian.pharmanetapi.util.DateFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -86,6 +91,27 @@ public class PedidoCompraService {
             }
         }
         return total;
+    }
+
+    public String gerarCodigo(){
+        String data, codigo;
+
+        data = DateFormatter.formatarData(LocalDate.now());
+
+        RandomNumberGenerator rng = RandomNumberGenerator.getRng();
+
+        do {
+            codigo = data + rng.gerarAlphaNumericoSeisDigitos();
+            // Só por precaução vamos checar no banco se já existe e gerar de novo até vir um único
+        } while(repository.existsByCodigo(codigo));
+
+        return codigo;
+    }
+
+    public boolean existsPedidoCompraByCodigo(String codigo){
+
+        return repository.existsByCodigo(codigo);
+
     }
 
     public void validar(PedidoCompra pedidoCompra) {
