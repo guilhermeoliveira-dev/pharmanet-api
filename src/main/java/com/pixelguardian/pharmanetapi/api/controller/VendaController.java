@@ -31,7 +31,14 @@ public class VendaController {
     @GetMapping()
     public ResponseEntity get() {
         List<Venda> vendas = vendaService.getVendas();
-        return ResponseEntity.ok(vendas.stream().map(VendaDTO::create).collect(Collectors.toList()));
+        List<VendaDTO> dtos = vendas.stream().map(venda -> {
+            VendaDTO dto = VendaDTO.create(venda);
+            if (venda.getPedidoCompra() != null) {
+                dto.setValorTotal(pedidoCompraService.calcularValorTotal(venda.getPedidoCompra()));
+            }
+            return dto;
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")

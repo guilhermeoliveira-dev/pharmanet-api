@@ -1,10 +1,15 @@
 package com.pixelguardian.pharmanetapi.service;
 
+import com.pixelguardian.pharmanetapi.api.dto.PagamentoDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.ItemPedido;
 import com.pixelguardian.pharmanetapi.model.entity.PedidoCompra;
 import com.pixelguardian.pharmanetapi.model.repository.ItemPedidoRepository;
 import com.pixelguardian.pharmanetapi.model.repository.PedidoCompraRepository;
+import com.pixelguardian.pharmanetapi.model.repository.VendaRepository;
+import com.pixelguardian.pharmanetapi.model.repository.PagamentoRepository;
+import com.pixelguardian.pharmanetapi.model.entity.Venda;
+import com.pixelguardian.pharmanetapi.model.entity.Pagamento;
 import com.pixelguardian.pharmanetapi.util.RandomNumberGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
 import com.pixelguardian.pharmanetapi.util.DateUtil;
 
 @Service
@@ -22,6 +28,8 @@ public class PedidoCompraService {
 
     private final PedidoCompraRepository repository;
     private final ItemPedidoRepository itemPedidoRepository;
+    private final PagamentoRepository pagamentoRepository;
+    private final VendaRepository vendaRepository;
 
     public List<PedidoCompra> getPedidoCompras() {
         return repository.findAll();
@@ -34,8 +42,6 @@ public class PedidoCompraService {
     @Transactional
     public PedidoCompra salvar(PedidoCompra pedidoCompra) {
         validar(pedidoCompra);
-        // Recalcular valor total para novos pedidos também
-        // Isso garante que mesmo um pedido sem itens seja salvo com valorTotal = 0.0f
         return repository.save(pedidoCompra);
     }
 
@@ -43,13 +49,11 @@ public class PedidoCompraService {
     public PedidoCompra atualizar(PedidoCompra pedidoCompra) {
         Objects.requireNonNull(pedidoCompra.getId());
         validar(pedidoCompra);
-
         Optional<PedidoCompra> existingPedidoOptional = repository.findById(pedidoCompra.getId());
         if (existingPedidoOptional.isEmpty()) {
             throw new RegraNegocioException("Pedido de compra não encontrado para atualização.");
         }
         PedidoCompra existingPedido = existingPedidoOptional.get();
-
         existingPedido.setDataCriacao(pedidoCompra.getDataCriacao());
         existingPedido.setCodigo(pedidoCompra.getCodigo());
         existingPedido.setStatus(pedidoCompra.getStatus());
@@ -57,8 +61,42 @@ public class PedidoCompraService {
         existingPedido.setDataEntrega(pedidoCompra.getDataEntrega());
         existingPedido.setEndereco(pedidoCompra.getEndereco());
         existingPedido.setStatusEntrega(pedidoCompra.getStatusEntrega());
-
         return repository.save(existingPedido);
+    }
+
+    @Transactional
+    public PedidoCompra confirmarPagamento(Long id, PagamentoDTO pagamentoDto) {
+        Optional<PedidoCompra> pedidoOptional = repository.findById(id);
+        if (pedidoOptional.isEmpty()) {
+            throw new RegraNegocioException("Pedido de compra não encontrado.");
+        }
+        PedidoCompra pedidoCompra = pedidoOptional.get();
+        if (pedidoCompra.getStatus().equals("pagamento pendente")) {
+
+            Pagamento pagamento = new Pagamento();
+            pagamento.setFormaPagamento(pagamentoDto.getFormaPagamento());
+            pagamento.setValor(pagamentoDto.getValor());
+            pagamento.setDataPagamento(DateUtil.formatarHifenReverso(LocalDate.now()));
+
+            if (pagamento.getValor() == null) {
+                float valorTotalCalculado = calcularValorTotal(pedidoCompra);
+                pagamento.setValor(valorTotalCalculado);
+            }
+
+            Pagamento pagamentoSalvo = pagamentoRepository.save(pagamento);
+
+            Venda venda = new Venda();
+            venda.setDataVenda(DateUtil.formatarHifenReverso(LocalDate.now()));
+            venda.setPagamento(pagamentoSalvo);
+            venda.setPedidoCompra(pedidoCompra);
+            vendaRepository.save(venda);
+
+            pedidoCompra.setStatus("entrega pendente");
+            pedidoCompra.setStatusEntrega("pendente");
+            return repository.save(pedidoCompra);
+        } else {
+            throw new RegraNegocioException("O pagamento deste pedido não pode ser confirmado.");
+        }
     }
 
     @Transactional
@@ -91,7 +129,7 @@ public class PedidoCompraService {
         return total;
     }
 
-    public String gerarCodigo(){
+    public String gerarCodigo() {
         String data, codigo;
 
         data = DateUtil.formatarColadoReverso(LocalDate.now());
@@ -100,16 +138,13 @@ public class PedidoCompraService {
 
         do {
             codigo = data + rng.gerarAlphaNumericoSeisDigitos();
-            // Só por precaução vamos checar no banco se já existe e gerar de novo até vir um único
-        } while(repository.existsByCodigo(codigo));
+        } while (repository.existsByCodigo(codigo));
 
         return codigo;
     }
 
-    public boolean existsPedidoCompraByCodigo(String codigo){
-
+    public boolean existsPedidoCompraByCodigo(String codigo) {
         return repository.existsByCodigo(codigo);
-
     }
 
     public void validar(PedidoCompra pedidoCompra) {
@@ -128,8 +163,8 @@ public class PedidoCompraService {
         if (pedidoCompra.getStatusEntrega() == null || pedidoCompra.getStatusEntrega().trim().isEmpty()) {
             throw new RegraNegocioException("Status de Entrega inválido");
         }
-        if (pedidoCompra.getEndereco() == null || pedidoCompra.getEndereco().getId() == null) {
-            throw new RegraNegocioException("Endereço de entrega inválido");
+        if (pedidoCompra.getTipoEntrega().equals("delivery") && (pedidoCompra.getEndereco() == null || pedidoCompra.getEndereco().getId() == null)) {
+            throw new RegraNegocioException("Endereço de entrega é obrigatório para o tipo de entrega 'delivery'");
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
+import com.pixelguardian.pharmanetapi.api.dto.PagamentoDTO;
 import com.pixelguardian.pharmanetapi.api.dto.ItemPedidoDTO;
 import com.pixelguardian.pharmanetapi.api.dto.PedidoCompraDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
@@ -33,7 +34,6 @@ public class PedidoCompraController {
     private final EstoqueLoteService estoqueLoteService;
     private final ProdutoService produtoService;
 
-
     @GetMapping()
     public ResponseEntity get() {
         List<PedidoCompra> pedidoCompras = pedidoCompraService.getPedidoCompras();
@@ -56,20 +56,6 @@ public class PedidoCompraController {
         dto.setValorTotal(pedidoCompraService.calcularValorTotal(pedidoCompra.get()));
         return ResponseEntity.ok(dto);
     }
-
-//    @PostMapping()
-//    public ResponseEntity post(@RequestBody PedidoCompraDTO dto) {
-//        try {
-//            PedidoCompra pedidoCompra = converter(dto);
-//            pedidoCompra = pedidoCompraService.salvar(pedidoCompra);
-//            for (ItemPedidoDTO dtoItemPedido: dto.getPedidos()){
-//                itemPedidoService.salvar(converterItemPedido(dtoItemPedido, pedidoCompra));
-//            }
-//            return new ResponseEntity(pedidoCompra, HttpStatus.CREATED);
-//        } catch (RegraNegocioException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
 
     @PostMapping()
     public ResponseEntity criarPedido(@RequestBody PedidoCompraDTO dto) {
@@ -146,23 +132,12 @@ public class PedidoCompraController {
     }
 
     @PutMapping("/confirmar_pagamento/{id}")
-    public ResponseEntity confirmarPagamento(@PathVariable("id") Long id, @RequestBody PedidoCompraDTO dto) {
+    public ResponseEntity confirmarPagamento(@PathVariable("id") Long id, @RequestBody PagamentoDTO dto) {
         if (pedidoCompraService.getPedidoCompraById(id).isEmpty()) {
             return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
         }
         try {
-            PedidoCompra pedidoCompra = pedidoCompraService.getPedidoCompraById(id).get();
-
-
-            if(pedidoCompra.getStatus().equals("pagamento pendente")){
-                pedidoCompra.setStatusEntrega("pendente");
-                pedidoCompra.setStatus("entrega pendente");
-
-
-
-            }
-
-            pedidoCompraService.salvar(pedidoCompra);
+            PedidoCompra pedidoCompra = pedidoCompraService.confirmarPagamento(id, dto);
             return ResponseEntity.ok(pedidoCompra);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -187,14 +162,6 @@ public class PedidoCompraController {
         modelMapper.addMappings(pedidoCompraMap);
 
         PedidoCompra pedidoCompra = modelMapper.map(dto, PedidoCompra.class);
-//        if (dto.getIdEndereco() != null) {
-//            Optional<Endereco> endereco = enderecoService.getEnderecoById(dto.getIdEndereco());
-//            if (endereco.isPresent()) {
-//                pedidoCompra.setEndereco(endereco.get());
-//            } else {
-//                pedidoCompra.setEndereco(null);
-//            }
-//        }
         if (dto.getIdUsuario() != null){
             Optional<Usuario> usuario = usuarioService.getUsuarioById(dto.getIdUsuario());
             if(usuario.isPresent()){
