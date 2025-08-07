@@ -109,7 +109,8 @@ public class PedidoCompraController {
         }
     }
 
-    @PutMapping("{id}")
+
+    @PutMapping("/{id}")
     public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody PedidoCompraDTO dto) {
         if (!pedidoCompraService.getPedidoCompraById(id).isPresent()) {
             return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
@@ -117,6 +118,50 @@ public class PedidoCompraController {
         try {
             PedidoCompra pedidoCompra = converter(dto);
             pedidoCompra.setId(id);
+            pedidoCompraService.salvar(pedidoCompra);
+            return ResponseEntity.ok(pedidoCompra);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/confirmar_entrega/{id}")
+    public ResponseEntity confirmarEntrega(@PathVariable("id") Long id, @RequestBody PedidoCompraDTO dto) {
+        if (pedidoCompraService.getPedidoCompraById(id).isEmpty()) {
+            return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            PedidoCompra pedidoCompra = pedidoCompraService.getPedidoCompraById(id).get();
+
+            if(pedidoCompra.getStatus().equals("entrega pendente") && pedidoCompra.getStatusEntrega().equals("pendente")){
+                pedidoCompra.setStatusEntrega("entregue");
+                pedidoCompra.setStatus("finalizado");
+                pedidoCompra.setDataEntrega(DateUtil.formatarHifenReverso(LocalDate.now()));
+            }
+            pedidoCompraService.salvar(pedidoCompra);
+            return ResponseEntity.ok(pedidoCompra);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/confirmar_pagamento/{id}")
+    public ResponseEntity confirmarPagamento(@PathVariable("id") Long id, @RequestBody PedidoCompraDTO dto) {
+        if (pedidoCompraService.getPedidoCompraById(id).isEmpty()) {
+            return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            PedidoCompra pedidoCompra = pedidoCompraService.getPedidoCompraById(id).get();
+
+
+            if(pedidoCompra.getStatus().equals("pagamento pendente")){
+                pedidoCompra.setStatusEntrega("pendente");
+                pedidoCompra.setStatus("entrega pendente");
+
+
+
+            }
+
             pedidoCompraService.salvar(pedidoCompra);
             return ResponseEntity.ok(pedidoCompra);
         } catch (RegraNegocioException e) {
