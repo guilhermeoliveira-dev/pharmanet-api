@@ -32,6 +32,9 @@ public class PedidoCompra {
     private Usuario usuario;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "pedidoCompra")
+    @OneToMany(mappedBy = "pedidoCompra", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedido> itensPedido;
+
+    @OneToOne(mappedBy = "pedidoCompra", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Venda venda;
 }
