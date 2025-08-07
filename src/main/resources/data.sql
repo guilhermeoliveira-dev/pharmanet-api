@@ -104,7 +104,7 @@ VALUES ('estoqueLote', 10, '10-10-2024', '28-02-2025', '10-2024-0038', 1, 1, 1),
 -- Clientes
 WITH novo_usuario AS (
     INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-        VALUES ('11111111111', '11-11-2014', 'usuario01@gmail.com', 'usuario01 da silva', '1dasilva', '1111-1111', 1)
+        VALUES ('11111111111', '11-11-2014', 'usuario01@gmail.com', 'usuario01 da silva', '$2a$10$kBVWAiXq.yxNqas.Svpwr.N05GB/8mQtl1RPn2hjs8LzOHEdjxbme', '1111-1111', 1)
         RETURNING id)
 INSERT
 INTO public.cliente (usuario_id, fidelidade_pontos)
