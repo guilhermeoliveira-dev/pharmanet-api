@@ -96,16 +96,15 @@ VALUES ('3123123123', 'fornecedorletraa@email.com', 'Fornecedor A', '4444-4444',
 -- coluna type representa qual tipo de estoque é, sendo valores válidos "estoque" ou "estoqueLote".
 INSERT INTO public.estoque
 ("type", quantidade, data_fabricacao, data_validade, lote, farmacia_id, fornecedor_id, produto_id)
-VALUES ('estoqueLote', 10, '2024-10-10', '2025-02-28', '10-2024-0038', 1, 1, 1),
-       ('estoqueLote', 50, '2024-10-07', '2024-08-15', '10-2024-0012', 1, 1, 2),
-       ('estoqueLote', 34, '2024-10-02', '2025-09-27', '10-2024-0002', 1, 1, 3),
-       ('estoqueLote', 21, '2024-11-02', '2025-10-27', '11-2024-0107', 1, 1, 3),
-       ('estoqueLote', 21, '2024-11-02', '2025-10-27', '11-2024-0107', 1, 1, 3);
+VALUES ('estoqueLote', 10, '10-10-2024', '28-02-2025', '10-2024-0038', 1, 1, 1),
+       ('estoqueLote', 50, '07-10-2024', '15-08-2025', '10-2024-0012', 1, 1, 2),
+       ('estoqueLote', 34, '02-10-2024', '27-09-2025', '10-2024-0002', 1, 1, 3),
+       ('estoqueLote', 21, '02-11-2024', '27-10-2025', '11-2024-0107', 1, 1, 3);
 
 -- Clientes
 WITH novo_usuario AS (
     INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-        VALUES ('11111111111', '2024-11-11', 'usuario01@gmail.com', 'usuario01 da silva', '1dasilva', '1111-1111', 1)
+        VALUES ('11111111111', '11-11-2014', 'usuario01@gmail.com', 'usuario01 da silva', '$2a$10$kBVWAiXq.yxNqas.Svpwr.N05GB/8mQtl1RPn2hjs8LzOHEdjxbme', '1111-1111', 1)
         RETURNING id)
 INSERT
 INTO public.cliente (usuario_id, fidelidade_pontos)
@@ -114,7 +113,7 @@ FROM novo_usuario;
 --
 WITH novo_usuario AS (
     INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-        VALUES ('22222222222', '2024-11-11', 'usuario02@gmail.com', 'usuario02 de carvalho', '2decarvalho', '2222-2222',
+        VALUES ('22222222222', '11-11-2014', 'usuario02@gmail.com', 'usuario02 de carvalho', '2decarvalho', '2222-2222',
                 2)
         RETURNING id)
 INSERT
@@ -124,7 +123,7 @@ FROM novo_usuario;
 --
 WITH novo_usuario AS (
     INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-        VALUES ('33333333333', '2024-11-11', 'usuario03@gmail.com', 'usuario03 pereira', '3pereira', '3333-3333', 3)
+        VALUES ('33333333333', '12-11-2014', 'usuario03@gmail.com', 'usuario03 pereira', '3pereira', '3333-3333', 3)
         RETURNING id)
 INSERT
 INTO public.cliente (usuario_id, fidelidade_pontos)
@@ -134,7 +133,7 @@ FROM novo_usuario;
 -- Funcionários
 WITH novo_usuario AS (
     INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-        VALUES ('44444444444', '2024-11-11', 'usuario04@gmail.com', 'usuario04 ferreira', '4ferreira', '4444-4444', 4)
+        VALUES ('44444444444', '11-11-2014', 'usuario04@gmail.com', 'usuario04 ferreira', '4ferreira', '4444-4444', 4)
         RETURNING id)
 INSERT
 INTO public.funcionario (usuario_id, expediente, salario, cargo_id, farmacia_id)
@@ -143,7 +142,7 @@ FROM novo_usuario;
 --
 WITH novo_usuario AS (
     INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-        VALUES ('55555555555', '2024-11-11', 'usuario05@gmail.com', 'usuario05 oliveira', '5oliveira', '5555-5555', 5)
+        VALUES ('55555555555', '11-11-2014', 'usuario05@gmail.com', 'usuario05 oliveira', '5oliveira', '5555-5555', 5)
         RETURNING id)
 INSERT
 INTO public.funcionario (usuario_id, expediente, salario, cargo_id, farmacia_id)
@@ -152,7 +151,7 @@ FROM novo_usuario;
 --
 WITH novo_usuario AS (
     INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-        VALUES ('66666666666', '2024-11-11', 'usuario06@gmail.com', 'usuario06 lopes', '6lopes', '6666-6666', 6)
+        VALUES ('66666666666', '11-11-2014', 'usuario06@gmail.com', 'usuario06 lopes', '6lopes', '6666-6666', 6)
         RETURNING id)
 INSERT
 INTO public.funcionario (usuario_id, expediente, salario, cargo_id, farmacia_id)
@@ -162,15 +161,15 @@ FROM novo_usuario;
 -- Pedidos de Compra
 INSERT INTO public.pedido_compra
 (codigo, data_criacao, data_entrega, status, status_entrega, tipo_entrega, endereco_id)
-VALUES ('202411133GHT4A', '2024-11-13', '2024-11-19', 'finalizado', 'entregue', 'delivery', 2),
-       ('2024111335LT4D', '2024-11-13', '', 'entrega pendente', 'pendente', 'busca no estabelecimento', null),
-       ('20241113FGN34C', '2024-11-13', '', 'pagamento pendente', 'pendente', 'delivery', 1);
+VALUES ('20241113000000', '13-11-2024', '19-11-2024', 'finalizado', 'entregue', 'delivery', 2),
+       ('20241113000001', '13-11-2024', '', 'entrega pendente', 'pendente', 'busca no estabelecimento', null),
+       ('20241113000002', '13-11-2024', '', 'pagamento pendente', 'pendente', 'delivery', 1);
 
 -- Receitas
 INSERT INTO public.receita(medico, data_emissao, validade, item_prescrito, aprovado, funcionario_usuario_id)
-VALUES ('Dr. Jose Mario', '2024-11-14', '2024-12-14', 'Cloridrato de Propranolol', true, 4),
-       ('Dr. Jose Mario', '2024-11-14', '2024-12-14', 'Cloridrato de Propranolol', true, 4),
-       ('Dr. Jose Mario', '2024-11-14', '2024-12-14', 'Cloridrato de Propranolol', false, 4);
+VALUES ('Dr. Jose Mario', '14-11-2024', '14-12-2024', 'Cloridrato de Propranolol', true, 4),
+       ('Dr. Jose Mario', '14-11-2024', '14-12-2024', 'Cloridrato de Propranolol', true, 4),
+       ('Dr. Jose Mario', '14-11-2024', '14-12-2024', 'Cloridrato de Propranolol', false, 4);
 
 -- Itens dos Pedidos
 INSERT INTO public.item_pedido(quantidade, preco_unitario, estoque_id, pedido_compra_id, receita_id)
