@@ -32,11 +32,8 @@ public class Funcionario extends Usuario{
     public List<String> getRoles() {
         List<String> roles = new ArrayList<>();
         roles.add("USER");
-        for(PermissaoIndividual permissao : cargo.getPermissoes()){
-            if (permissao.getTemPermissao() &&
-                    permissao.getPermissao().getNome().equals("Administrador")){
-                roles.add("ADMIN");
-            }
+        if(cargo.getNome().equals("Administrador")){
+            roles.add("ADMIN");
         }
         return roles;
     }
