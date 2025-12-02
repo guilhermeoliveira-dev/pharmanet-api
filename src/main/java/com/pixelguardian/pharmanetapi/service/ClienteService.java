@@ -61,8 +61,8 @@ public class ClienteService {
         if (cliente.getEndereco() == null || cliente.getEndereco().getId() == null || cliente.getEndereco().getId() == 0) {
             throw new RegraNegocioException("Endereço inválido");
         }
-        if (cliente.getFidelidadePontos() == null) {
-            throw new RegraNegocioException("Pontos de fidalidade inválidos");
-        }
+//        if (cliente.getFidelidadePontos() == null) {
+//            throw new RegraNegocioException("Pontos de fidalidade inválidos");
+//        }
     }
 }
