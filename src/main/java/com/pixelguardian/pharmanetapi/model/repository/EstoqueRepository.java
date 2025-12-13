@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
+
     @Query("select e from Estoque e where e.produto = ?1")
     List<Estoque> findEstoqueByProduto(Produto produto);
 
-
+    @Query("select e from Estoque e join e.produto p where p.id = ?1")
+    List<Estoque> findByProdutoId(Long idProduto);
 
 }
