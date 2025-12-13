@@ -19,6 +19,8 @@ public class ItemPedido {
     private Integer quantidade;
     private Float precoUnitario;
 
+    private String nomeProduto;
+
     @ManyToOne
     private Estoque estoque;
 
