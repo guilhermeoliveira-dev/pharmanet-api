@@ -20,11 +20,9 @@ public class Cliente extends Usuario {
 
     private Float fidelidadePontos;
 
-    private static List<String> roles = new ArrayList<>(Collections.singleton("USER"));
-
     @Override
     @ElementCollection
     public List<String> getRoles() {
-        return roles;
+        return new ArrayList<>(Collections.singleton("USER"));
     }
 }
