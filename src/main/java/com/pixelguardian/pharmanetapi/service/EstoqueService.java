@@ -4,6 +4,7 @@ import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
 import com.pixelguardian.pharmanetapi.model.entity.Estoque;
 import com.pixelguardian.pharmanetapi.model.entity.Produto;
 import com.pixelguardian.pharmanetapi.model.repository.EstoqueRepository;
+import lombok.RequiredArgsConstructor; // Adicionado para injeção via construtor (melhor prática)
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,13 +13,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EstoqueService {
 
-    private EstoqueRepository repository;
-
-    public EstoqueService(EstoqueRepository repository) {
-        this.repository = repository;
-    }
+    private final EstoqueRepository repository;
 
     public List<Estoque> getEstoques() {
         return repository.findAll();
@@ -26,6 +24,14 @@ public class EstoqueService {
 
     public Optional<Estoque> getEstoqueById(Long id) {
         return repository.findById(id);
+    }
+
+    public List<Estoque> getEstoqueByProdutoId(Long idProduto) {
+        return repository.findByProdutoId(idProduto);
+    }
+
+    public List<Estoque> findEstoqueByProduto(Produto produto){
+        return repository.findEstoqueByProduto(produto);
     }
 
     @Transactional
@@ -40,12 +46,8 @@ public class EstoqueService {
         repository.delete(estoque);
     }
 
-    public List<Estoque> findEstoqueByProduto(Produto produto){
-        return repository.findEstoqueByProduto(produto);
-    }
-
     public void validar(Estoque estoque) {
-        if (estoque.getQuantidade() == null) { // Removi o quantidade == 0, pq n faz sentido, pode ser que o estoque esteja vazio
+        if (estoque.getQuantidade() == null) {
             throw new RegraNegocioException("Quantidade inválida");
         }
         if (estoque.getProduto() == null || estoque.getProduto().getId() == null || estoque.getProduto().getId() == 0) {
