@@ -33,34 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtService jwtService;
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public OncePerRequestFilter jwtFilter() {
         return new JwtAuthFilter(jwtService, usuarioService);
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        final CorsConfiguration configuration = new CorsConfiguration();
-
-        // Permite o seu front-end (MUITO IMPORTANTE)
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-
-        // Métodos permitidos, incluindo OPTIONS (crucial para pre-flight)
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-
-        // Cabeçalhos permitidos (incluindo o Authorization)
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-
-        configuration.setAllowCredentials(true);
-
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Aplica a todas as rotas
-
-        return source;
     }
 
     @Override
@@ -73,72 +52,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and()
                 .csrf().disable()
+                .cors()
+                .and()
                 .authorizeRequests()
 
-                .antMatchers("/api/v1/usuarios/auth/**")
+                .antMatchers(HttpMethod.POST, "/api/v1/usuarios", "/api/v1/usuarios/**")
+                .permitAll()
+                .antMatchers("/api/v1/usuarios/auth")
                 .permitAll()
 
-                .antMatchers("/api/v1/cargos/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/categorias/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/clientes/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/enderecos/**")
-                .hasAnyRole("ADMIN", "USER")
-
-                .antMatchers("/api/v1/estoques/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/farmacias/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/feedbacks/**")
-                .hasAnyRole("ADMIN", "USER")
-
-                .antMatchers("/api/v1/fornecedores/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/funcionarios/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/itemsPedidos/**")
-                .hasAnyRole("ADMIN", "USER")
-
-                .antMatchers("/api/v1/notificacoes/**")
-                .hasAnyRole("ADMIN", "USER")
-
-                .antMatchers("/api/v1/pagamentos/**")
-                .hasAnyRole("ADMIN", "USER")
-
-                .antMatchers("/api/v1/pedidoCompras/**")
-                .hasAnyRole("ADMIN", "USER")
-
-                .antMatchers(HttpMethod.GET,"/api/v1/estoques/**")
+                .antMatchers(HttpMethod.POST, "/api/v1/pedidoCompras/carrinho")
                 .permitAll()
 
-                .antMatchers(HttpMethod.GET,"/api/v1/produtos/**")
+                .antMatchers(HttpMethod.GET, "/api/v1/**")
                 .permitAll()
-
-                .antMatchers("/api/v1/produtos/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/receitas/**")
-                .hasAnyRole("ADMIN", "USER")
-
-                .antMatchers("/api/v1/tarjas/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/usuarios/**")
-                .hasRole("ADMIN")
-
-                .antMatchers("/api/v1/vendas/**")
-                .hasAnyRole("ADMIN", "USER")
 
                 .anyRequest().authenticated()
                 .and()
@@ -146,7 +74,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
-        ;
     }
 
     @Override
@@ -158,5 +85,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/configuration/security",
                 "/swagger-ui.html",
                 "/webjars/**");
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
