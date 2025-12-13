@@ -93,6 +93,7 @@ VALUES ('3123123123', 'fornecedorletraa@email.com', 'Fornecedor A', '4444-4444',
        ('3123123123', 'fornecedorletrac@email.com', 'Fornecedor C', '4444-4444', 2);
 
 -- Estoques
+-- coluna type representa qual tipo de estoque é, sendo valores válidos "estoque" ou "estoqueLote".
 INSERT INTO public.estoque
 ("type", quantidade, data_fabricacao, data_validade, lote, farmacia_id, fornecedor_id, produto_id)
 VALUES ('estoqueLote', 10, '2024-10-10', '2025-02-28', '10-2024-0038', 1, 1, 1),
@@ -103,30 +104,28 @@ VALUES ('estoqueLote', 10, '2024-10-10', '2025-02-28', '10-2024-0038', 1, 1, 1),
 
 -- Clientes
 WITH novo_usuario AS (
-INSERT
-INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-VALUES ('11111111111', '2024-11-11', 'usuario01@gmail.com', 'usuario01 da silva', '$2a$10$922i7G5V2/3uKxJ8O0h2QeN03GB/8mQtl1RPn2hjs8LzOHEdjxbme', '1111-1111', 1)
-    RETURNING id)
-INSERT
-INTO public.cliente (usuario_id, fidelidade_pontos)
-SELECT id, 0.0
-FROM novo_usuario;
---
-WITH novo_usuario AS (
-INSERT
-INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-VALUES ('22222222222', '2024-11-11', 'usuario02@gmail.com', 'usuario02 de carvalho', '$2a$10$922i7G5V2/3uKxJ8O0h2QeN03GB/8mQtl1RPn2hjs8LzOHEdjxbme', '2222-2222', 2)
-    RETURNING id)
+    INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
+        VALUES ('11111111111', '2024-11-11', 'usuario01@gmail.com', 'usuario01 da silva', '$2a$10$kBVWAiXq.yxNqas.Svpwr.N05GB/8mQtl1RPn2hjs8LzOHEdjxbme', '1111-1111', 1)
+        RETURNING id)
 INSERT
 INTO public.cliente (usuario_id, fidelidade_pontos)
 SELECT id, 0.0
 FROM novo_usuario;
 --
 WITH novo_usuario AS (
+    INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
+        VALUES ('22222222222', '2024-11-11', 'usuario02@gmail.com', 'usuario02 de carvalho', '$2a$10$kBVWAiXq.yxNqas.Svpwr.N05GB/8mQtl1RPn2hjs8LzOHEdjxbme', '2222-2222',
+                2)
+        RETURNING id)
 INSERT
-INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-VALUES ('33333333333', '2024-11-11', 'usuario03@gmail.com', 'usuario03 pereira', '$2a$10$922i7G5V2/3uKxJ8O0h2QeN03GB/8mQtl1RPn2hjs8LzOHEdjxbme', '3333-3333', 3)
-    RETURNING id)
+INTO public.cliente (usuario_id, fidelidade_pontos)
+SELECT id, 0.0
+FROM novo_usuario;
+--
+WITH novo_usuario AS (
+    INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
+        VALUES ('33333333333', '2024-11-11', 'usuario03@gmail.com', 'usuario03 pereira', '$2a$10$kBVWAiXq.yxNqas.Svpwr.N05GB/8mQtl1RPn2hjs8LzOHEdjxbme', '3333-3333', 3)
+        RETURNING id)
 INSERT
 INTO public.cliente (usuario_id, fidelidade_pontos)
 SELECT id, 0.0
@@ -134,30 +133,27 @@ FROM novo_usuario;
 
 -- Funcionários
 WITH novo_usuario AS (
-INSERT
-INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-VALUES ('44444444444', '2024-11-11', 'usuario04@gmail.com', 'usuario04 ferreira', '$2a$10$922i7G5V2/3uKxJ8O0h2QeN03GB/8mQtl1RPn2hjs8LzOHEdjxbme', '4444-4444', 4)
-    RETURNING id)
+    INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
+        VALUES ('44444444444', '2024-11-11', 'usuario04@gmail.com', 'usuario04 ferreira', '$2a$10$kBVWAiXq.yxNqas.Svpwr.N05GB/8mQtl1RPn2hjs8LzOHEdjxbme', '4444-4444', 4)
+        RETURNING id)
 INSERT
 INTO public.funcionario (usuario_id, expediente, salario, cargo_id, farmacia_id)
 SELECT id, 'manha', 1050.0, 1, 1
 FROM novo_usuario;
 --
 WITH novo_usuario AS (
-INSERT
-INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-VALUES ('55555555555', '2024-11-11', 'usuario05@gmail.com', 'usuario05 oliveira', '$2a$10$922i7G5V2/3uKxJ8O0h2QeN03GB/8mQtl1RPn2hjs8LzOHEdjxbme', '5555-5555', 5)
-    RETURNING id)
+    INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
+        VALUES ('55555555555', '2024-11-11', 'usuario05@gmail.com', 'usuario05 oliveira', '$2a$10$kBVWAiXq.yxNqas.Svpwr.N05GB/8mQtl1RPn2hjs8LzOHEdjxbme', '5555-5555', 5)
+        RETURNING id)
 INSERT
 INTO public.funcionario (usuario_id, expediente, salario, cargo_id, farmacia_id)
 SELECT id, 'tarde', 2010.0, 2, 2
 FROM novo_usuario;
 --
 WITH novo_usuario AS (
-INSERT
-INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
-VALUES ('66666666666', '2024-11-11', 'usuario06@gmail.com', 'usuario06 lopes', '$2a$10$922i7G5V2/3uKxJ8O0h2QeN03GB/8mQtl1RPn2hjs8LzOHEdjxbme', '6666-6666', 6)
-    RETURNING id)
+    INSERT INTO public.usuario (cpf, data_admissao, email, nome, senha, telefone, endereco_id)
+        VALUES ('66666666666', '2024-11-11', 'usuario06@gmail.com', 'usuario06 lopes', '$2a$10$kBVWAiXq.yxNqas.Svpwr.N05GB/8mQtl1RPn2hjs8LzOHEdjxbme', '6666-6666', 6)
+        RETURNING id)
 INSERT
 INTO public.funcionario (usuario_id, expediente, salario, cargo_id, farmacia_id)
 SELECT id, 'manha', 1450.0, 3, 3
@@ -177,11 +173,13 @@ VALUES ('Dr. Jose Mario', '2024-11-14', '2024-12-14', 'Cloridrato de Propranolol
        ('Dr. Jose Mario', '2024-11-14', '2024-12-14', 'Cloridrato de Propranolol', false, 4);
 
 -- Itens dos Pedidos
-INSERT INTO public.item_pedido(quantidade, preco_unitario, nome_produto, estoque_id, pedido_compra_id, receita_id)
-VALUES (3, 50.0, 'Omega 3', 1, 1, 1),
-       (1, 50.0, 'Omega 3', 2, 1, 1),
-       (1, 8.99, 'Cloridrato de Propranolol', 3, 3, 2),
-       (2, 8.99, 'Cloridrato de Propranolol', 3, 3, 3);
+INSERT INTO public.item_pedido(quantidade, preco_unitario, estoque_id, pedido_compra_id, receita_id)
+VALUES (3, 50, 1, 1, 1),
+--        (1, 4, 2, 2, 1),
+       (1, 50, 2, 1, 1),
+--        (2, 8.99, 2, 3, 1),
+       (1, 8.99, 3, 3, 2),
+       (2, 8.99, 3, 3, 3);
 
 -- Pagamentos
 INSERT INTO public.pagamento(data_pagamento, valor, forma_pagamento)
@@ -192,15 +190,23 @@ VALUES ('13-11-2024', 150, 'credito'),
 INSERT INTO public.notificacao(usuario_id, mensagem, data_envio, tipo_notificacao)
 VALUES (1, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (2, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
+--        (3, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (4, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
+--        (5, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push'),
        (6, 'Bom dia, obrigado por cadastrar!', '14-11-2024', 'push');
 
 -- Feedbacks
 INSERT INTO public.feedback(comentario, nota, produto_id, cliente_usuario_id)
 VALUES ('Otimo produto', 4, 2, 1),
        ('Gostei, mas deu problema pro gato', 3.5, 2, 2);
+--        ('Me curou', 5, 1, 3);
 
 -- Vendas
 INSERT INTO public.venda(data_venda, pagamento_id, pedido_compra_id)
 VALUES ('13-11-2024', 1, 1),
        ('13-11-2024', 2, 2);
+
+-- Itens dos Pedidos de Compra (TODO: Ajustar os IDs depois conforme os testes no DBeaver. Substituir os IDs igual a 0 e as strings vazias por NULL)
+-- INSERT INTO public.item_pedido
+-- (preco_unitario, quantidade, estoque_id, pedido_compra_id, receita_id)
+-- VALUES(0, 0, 0, 0, 0);
