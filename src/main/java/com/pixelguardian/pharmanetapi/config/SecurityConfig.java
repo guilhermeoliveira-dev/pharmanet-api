@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtService jwtService;
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -42,26 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthFilter(jwtService, usuarioService);
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        final CorsConfiguration configuration = new CorsConfiguration();
 
-        // Permite o seu front-end (MUITO IMPORTANTE)
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-
-        // Métodos permitidos, incluindo OPTIONS (crucial para pre-flight)
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-
-        // Cabeçalhos permitidos (incluindo o Authorization)
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-
-        configuration.setAllowCredentials(true);
-
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Aplica a todas as rotas
-
-        return source;
-    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -73,11 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and()
                 .csrf().disable()
+                .cors().and()
                 .authorizeRequests()
 
-                .antMatchers("/api/v1/usuarios/auth/**")
+                .antMatchers(HttpMethod.POST, "/api/v1/usuarios", "/api/v1/usuarios/**")
+                .permitAll()
+                .antMatchers("/api/v1/usuarios/auth")
                 .permitAll()
 
                 .antMatchers("/api/v1/cargos/**")
@@ -125,6 +108,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/v1/produtos/**")
                 .permitAll()
 
+                .antMatchers(HttpMethod.POST, "/api/v1/pedidoCompras/carrinho")
+                .permitAll()
+
                 .antMatchers("/api/v1/produtos/**")
                 .hasRole("ADMIN")
 
@@ -146,7 +132,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
-        ;
+
     }
 
     @Override
@@ -159,4 +145,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-ui.html",
                 "/webjars/**");
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    //veio do gemini
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        final CorsConfiguration configuration = new CorsConfiguration();
+//
+//        // Permite o seu front-end (MUITO IMPORTANTE)
+//        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+//
+//        // Métodos permitidos, incluindo OPTIONS (crucial para pre-flight)
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+//
+//        // Cabeçalhos permitidos (incluindo o Authorization)
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+//
+//        configuration.setAllowCredentials(true);
+//
+//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration); // Aplica a todas as rotas
+//
+//        return source;
+//    }
 }

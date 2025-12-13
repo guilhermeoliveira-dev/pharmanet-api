@@ -1,17 +1,19 @@
 package com.pixelguardian.pharmanetapi.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PedidoCompra {
 
     @Id
@@ -20,20 +22,20 @@ public class PedidoCompra {
 
     private String codigo;
     private String dataCriacao;
+    private String dataEntrega;
     private String status;
     private String tipoEntrega;
     private String statusEntrega;
-    private String dataEntrega;
-
-    @ManyToOne
-    private Endereco endereco;
 
     @ManyToOne
     private Usuario usuario;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "pedidoCompra", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemPedido> itensPedido;
+    @ManyToOne
+    private Endereco endereco;
+
+    @OneToMany(mappedBy = "pedidoCompra", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<ItemPedido> itensPedido = new ArrayList<>();
 
     @OneToOne(mappedBy = "pedidoCompra", cascade = CascadeType.ALL, orphanRemoval = true)
     private Venda venda;

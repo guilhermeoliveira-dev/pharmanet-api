@@ -1,6 +1,8 @@
 package com.pixelguardian.pharmanetapi.api.controller;
 
 import com.pixelguardian.pharmanetapi.api.dto.PagamentoDTO;
+import com.pixelguardian.pharmanetapi.api.dto.ItemCarrinhoDTO;
+import com.pixelguardian.pharmanetapi.api.dto.CarrinhoDTO;
 import com.pixelguardian.pharmanetapi.api.dto.ItemPedidoDTO;
 import com.pixelguardian.pharmanetapi.api.dto.PedidoCompraDTO;
 import com.pixelguardian.pharmanetapi.exception.RegraNegocioException;
@@ -57,39 +59,45 @@ public class PedidoCompraController {
         return ResponseEntity.ok(dto);
     }
 
+    @PostMapping("/carrinho")
+    public ResponseEntity criarPedidoDoCarrinho(@RequestBody CarrinhoDTO dto) {
+        try {
+            PedidoCompra pedidoCompra = pedidoCompraService.criarPedido(dto);
+            return new ResponseEntity(PedidoCompraDTO.create(pedidoCompra), HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno ao criar o pedido: " + e.getMessage());
+        }
+    }
+
     @PostMapping()
-    public ResponseEntity criarPedido(@RequestBody PedidoCompraDTO dto) {
+    public ResponseEntity post(@RequestBody PedidoCompraDTO dto) {
         try {
             PedidoCompra pedidoCompra = converter(dto);
-            pedidoCompra.setCodigo(pedidoCompraService.gerarCodigo());
-            pedidoCompra.setDataCriacao(DateUtil.formatarHifenReverso(LocalDate.now()));
-            pedidoCompra.setStatus("pagamento pendente");
-            if (pedidoCompra.getTipoEntrega().equals("delivery") || pedidoCompra.getTipoEntrega().equals("busca no estabelecimento")){
+            if (pedidoCompra.getCodigo() == null || pedidoCompra.getCodigo().trim().isEmpty()) {
+                pedidoCompra.setCodigo(pedidoCompraService.gerarCodigo());
+            }
+            if (pedidoCompra.getDataCriacao() == null || pedidoCompra.getDataCriacao().trim().isEmpty()) {
+                pedidoCompra.setDataCriacao(DateUtil.formatarHifenReverso(LocalDate.now()));
+            }
+
+            if (pedidoCompra.getStatus() == null || pedidoCompra.getStatus().trim().isEmpty()) {
+                pedidoCompra.setStatus("pagamento pendente");
+            }
+            if (pedidoCompra.getStatusEntrega() == null || pedidoCompra.getStatusEntrega().trim().isEmpty()){
                 pedidoCompra.setStatusEntrega("pendente");
             }
 
             pedidoCompra = pedidoCompraService.salvar(pedidoCompra);
 
-
-            for (ItemPedidoDTO dtoItemPedido: dto.getPedidos()){
-                ItemPedido itemPedido = converterItemPedido(dtoItemPedido, pedidoCompra);
-                Estoque estoqueEncontrado;
-                Optional<Produto> produto = produtoService.getProdutoById(dtoItemPedido.getIdProduto());
-                if(produto.isPresent()){
-                    if(produto.get().getRequerLote()){
-                        estoqueEncontrado = estoqueLoteService.acharEstoquePorProduto(produto.get()).get();
-                    }else{
-                        estoqueEncontrado = estoqueService.findEstoqueByProduto(produto.get()).get(1);
-                    }
+            if (dto.getPedidos() != null) {
+                for (ItemPedidoDTO dtoItemPedido: dto.getPedidos()){
+                    ItemPedido itemPedido = converterItemPedido(dtoItemPedido, pedidoCompra);
+                    itemPedidoService.salvar(itemPedido);
                 }
-                else{
-                    estoqueEncontrado = null;
-                }
-
-                itemPedido.setEstoque(estoqueEncontrado);
-                itemPedidoService.salvar(itemPedido);
             }
-            return new ResponseEntity(pedidoCompra, HttpStatus.CREATED);
+            return new ResponseEntity(PedidoCompraDTO.create(pedidoCompra), HttpStatus.CREATED);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -104,28 +112,25 @@ public class PedidoCompraController {
         try {
             PedidoCompra pedidoCompra = converter(dto);
             pedidoCompra.setId(id);
-            pedidoCompraService.salvar(pedidoCompra);
-            return ResponseEntity.ok(pedidoCompra);
+            pedidoCompraService.atualizar(pedidoCompra);
+
+            // Lógica de atualização de itens omitida por simplicidade, foco no fluxo principal
+
+            return ResponseEntity.ok(PedidoCompraDTO.create(pedidoCompra));
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    // MÉTODO CORRIGIDO: Agora chama o método implementado no Service (Issue 1)
     @PutMapping("/confirmar_entrega/{id}")
-    public ResponseEntity confirmarEntrega(@PathVariable("id") Long id, @RequestBody PedidoCompraDTO dto) {
+    public ResponseEntity confirmarEntrega(@PathVariable("id") Long id) {
         if (pedidoCompraService.getPedidoCompraById(id).isEmpty()) {
             return new ResponseEntity("Pedido de compra não encontrado", HttpStatus.NOT_FOUND);
         }
         try {
-            PedidoCompra pedidoCompra = pedidoCompraService.getPedidoCompraById(id).get();
-
-            if(pedidoCompra.getStatus().equals("entrega pendente") && pedidoCompra.getStatusEntrega().equals("pendente")){
-                pedidoCompra.setStatusEntrega("entregue");
-                pedidoCompra.setStatus("finalizado");
-                pedidoCompra.setDataEntrega(DateUtil.formatarHifenReverso(LocalDate.now()));
-            }
-            pedidoCompraService.salvar(pedidoCompra);
-            return ResponseEntity.ok(pedidoCompra);
+            PedidoCompra pedidoCompra = pedidoCompraService.confirmarEntrega(id);
+            return ResponseEntity.ok(PedidoCompraDTO.create(pedidoCompra));
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -138,7 +143,7 @@ public class PedidoCompraController {
         }
         try {
             PedidoCompra pedidoCompra = pedidoCompraService.confirmarPagamento(id, dto);
-            return ResponseEntity.ok(pedidoCompra);
+            return ResponseEntity.ok(PedidoCompraDTO.create(pedidoCompra));
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -162,15 +167,22 @@ public class PedidoCompraController {
         modelMapper.addMappings(pedidoCompraMap);
 
         PedidoCompra pedidoCompra = modelMapper.map(dto, PedidoCompra.class);
+
         if (dto.getIdUsuario() != null){
-            Optional<Usuario> usuario = usuarioService.getUsuarioById(dto.getIdUsuario());
-            if(usuario.isPresent()){
-                pedidoCompra.setUsuario(usuario.get());
-            }else{
-                pedidoCompra.setUsuario(null);
+            Usuario usuario = usuarioService.getUsuarioById(dto.getIdUsuario())
+                    .orElseThrow(() -> new RegraNegocioException("Usuário associado ao pedido não encontrado."));
+            pedidoCompra.setUsuario(usuario);
+
+            if (dto.getIdEndereco() == null && usuario.getEndereco() != null) {
+                pedidoCompra.setEndereco(usuario.getEndereco());
             }
         }
-        pedidoCompra.setEndereco(pedidoCompra.getUsuario().getEndereco());
+
+        if (dto.getIdEndereco() != null){
+            Endereco endereco = enderecoService.getEnderecoById(dto.getIdEndereco())
+                    .orElseThrow(() -> new RegraNegocioException("Endereço associado ao pedido não encontrado."));
+            pedidoCompra.setEndereco(endereco);
+        }
 
         return pedidoCompra;
     }
@@ -178,26 +190,24 @@ public class PedidoCompraController {
     public ItemPedido converterItemPedido(ItemPedidoDTO dto, PedidoCompra pedidoCompra) {
         ModelMapper modelMapper = new ModelMapper();
         ItemPedido itemPedido = modelMapper.map(dto, ItemPedido.class);
+
         if (dto.getIdReceita() != null && dto.getIdReceita() != 0) {
-            Optional<Receita> receita = receitaService.getReceitaById(dto.getIdReceita());
-            if (receita.isPresent()) {
-                itemPedido.setReceita(receita.get());
-            } else {
-                itemPedido.setReceita(null);
-            }
+            Receita receita = receitaService.getReceitaById(dto.getIdReceita())
+                    .orElseThrow(() -> new RegraNegocioException("Receita associada ao item do pedido não encontrada."));
+            itemPedido.setReceita(receita);
+        } else {
+            itemPedido.setReceita(null);
         }
+
         if (dto.getIdEstoque() != null && dto.getIdEstoque() != 0) {
-            Optional<Estoque> estoque = estoqueService.getEstoqueById((dto.getIdEstoque()));
-            if (estoque.isPresent()) {
-                itemPedido.setEstoque(estoque.get());
-            } else {
-                itemPedido.setEstoque(null);
-            }
+            Estoque estoque = estoqueService.getEstoqueById(dto.getIdEstoque())
+                    .orElseThrow(() -> new RegraNegocioException("Estoque associado ao item do pedido não encontrado."));
+            itemPedido.setEstoque(estoque);
+        } else {
+            itemPedido.setEstoque(null);
         }
+
         itemPedido.setPedidoCompra(pedidoCompra);
         return itemPedido;
-
     }
-
-
 }
