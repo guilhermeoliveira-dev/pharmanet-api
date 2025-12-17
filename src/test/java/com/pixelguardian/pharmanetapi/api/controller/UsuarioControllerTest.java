@@ -1,4 +1,4 @@
-package com.pixelguardian.pharmanetapi.controller;
+package com.pixelguardian.pharmanetapi.api.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
