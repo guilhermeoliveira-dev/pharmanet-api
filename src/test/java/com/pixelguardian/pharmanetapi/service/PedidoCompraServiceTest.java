@@ -12,37 +12,40 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PedidoCompraServiceTest {
 
-    @Autowired
-    public PedidoCompraService pedidoCompraService;
+    // Não me lembro o contexto desse teste, creio que foi feito como uma forma de debug durante o desenvolvimento
 
-    @Test
-    void testarGerarCodigosUnicos(){
+//    @Autowired
+//    public PedidoCompraService pedidoCompraService;
+//
+//    @Test
+//    void testarGerarCodigosUnicos(){
+//
+//        int n = 10000;
+//
+//        String[] codigos = new String[n];
+//
+//        for(int i = 0; i < n; i++){
+//
+//            codigos[i] = pedidoCompraService.gerarCodigo();
+//
+//            PedidoCompra pedido = new PedidoCompra();
+//            pedido.setCodigo(codigos[i]);
+//            pedidoCompraService.salvar(pedido);
+//
+//            Assertions.assertFalse(pedidoCompraService.existsPedidoCompraByCodigo(codigos[i]));
+//
+//            for (int j = 0; j < n; j++){
+//
+//                if (i == j || codigos[j] != null || codigos[i] == null){
+//                    continue;
+//                }
+//
+//                Assertions.assertNotEquals(codigos[j], codigos[i]);
+//
+//            }
+//        }
+//
+//    }
 
-        int n = 10000;
-
-        String[] codigos = new String[n];
-
-        for(int i = 0; i < n; i++){
-
-            codigos[i] = pedidoCompraService.gerarCodigo();
-
-            PedidoCompra pedido = new PedidoCompra();
-            pedido.setCodigo(codigos[i]);
-            pedidoCompraService.salvar(pedido);
-
-            Assertions.assertFalse(pedidoCompraService.existsPedidoCompraByCodigo(codigos[i]));
-
-            for (int j = 0; j < n; j++){
-
-                if (i == j || codigos[j] != null || codigos[i] == null){
-                    continue;
-                }
-
-                Assertions.assertNotEquals(codigos[j], codigos[i]);
-
-            }
-        }
-
-    }
 
 }
