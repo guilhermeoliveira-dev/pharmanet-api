@@ -25,4 +25,9 @@ public class Cliente extends Usuario {
     public List<String> getRoles() {
         return new ArrayList<>(Collections.singleton("USER"));
     }
+
+    public Cliente(Long id, String nome, String email, String senha, String cpf, String telefone, String dataAdmissao, Endereco endereco, Float fidelidadePontos) {
+        super(id, nome, email, senha, cpf, telefone, dataAdmissao, endereco);
+        this.fidelidadePontos = fidelidadePontos;
+    }
 }

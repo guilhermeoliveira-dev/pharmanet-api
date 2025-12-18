@@ -37,4 +37,12 @@ public class Funcionario extends Usuario{
         }
         return roles;
     }
+
+    public Funcionario(Long id, String nome, String email, String senha, String cpf, String telefone, String dataAdmissao, Endereco endereco, Float salario, String expediente, Cargo cargo, Farmacia farmacia) {
+        super(id, nome, email, senha, cpf, telefone, dataAdmissao, endereco);
+        this.salario = salario;
+        this.expediente = expediente;
+        this.cargo = cargo;
+        this.farmacia = farmacia;
+    }
 }

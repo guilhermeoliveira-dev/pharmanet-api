@@ -59,12 +59,9 @@ public class FuncionarioService {
             throw new RegraNegocioException("Endereço inválido");
         }
         if (funcionario.getSalario() == null || funcionario.getSalario() < 0) {
-            //TODO: salário == 0 é exception? fiquei na duvida se isso faz sentido
-            //  || funcionario.getSalario() == 0
             throw new RegraNegocioException("Salário inválido");
         }
         if (funcionario.getExpediente() == null || funcionario.getExpediente().trim().equals("")) {
-            //TODO: expediente podia ser um enum
             throw new RegraNegocioException("Expediente inválido");
         }
         if (funcionario.getCargo() == null || funcionario.getCargo().getId() == null || funcionario.getCargo().getId() == 0) {

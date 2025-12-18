@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Cliente e Funcionario Service Test" type="CompoundRunConfigurationType">
+    <toRun name="ClienteServiceTest" type="JUnit" />
+    <toRun name="FuncionarioServiceTest" type="JUnit" />
+    <method v="2" />
+  </configuration>
+</component>
